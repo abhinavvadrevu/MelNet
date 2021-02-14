@@ -6,7 +6,7 @@ model:
 ---
 data:
   name: 'Blizzard'
-  path: '../Datasets/Blizzard/Lessac_Blizzard2013_CatherineByers_train/train/segmented'
+  path: './datasets/Blizzard/Lessac_Blizzard2013_CatherineByers_train/train/segmented'
   extension: '*.wav'
 ---
 audio:

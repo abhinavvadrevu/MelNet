@@ -1,10 +1,11 @@
+jamo==0.4.1
 librosa
 matplotlib
 numpy
 audiosegment
 pyyaml
 tensorboard
-torch==1.2.0
+torch==1.4.0
 tqdm
 inflect
 Unidecode

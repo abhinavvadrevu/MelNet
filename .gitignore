@@ -40,6 +40,7 @@ wheels/
 .installed.cfg
 *.egg
 MANIFEST
+myvenv
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -128,3 +129,6 @@ Blizzard/
 KSS/
 OpenVoice/
 TED-LIUM/
+
+# MacOS files
+.DS_Store
