@@ -18,6 +18,7 @@ temp/
 __pycache__/
 *.py[cod]
 *$py.class
+.zip
 
 # C extensions
 *.so
@@ -129,6 +130,7 @@ Blizzard/
 KSS/
 OpenVoice/
 TED-LIUM/
+datasets/*
 
 # MacOS files
 .DS_Store
