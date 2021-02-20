@@ -1,20 +1,15 @@
-0. Clone the git repo over
-`ssh-keygen -t rsa -b 4096 -C "abhinavvadrevu1@gmail.com"`
-Press Enter to accept default locations
+1. Copy over the setup script
+MACHINE="ec2-54-157-191-54.compute-1.amazonaws.com"
+`scp -i ~/.ssh/chronicle-test-keys.pem ~/workspace/MelNet/setup.sh ubuntu@$MACHINE:/home/ubuntu/`
 
-1. Copy the data over as a zip file
-
-`scp -i ~/.ssh/chronicle-test-keys.pem ./datasets/KSS.zip ubuntu@ec2-54-157-191-54.compute-1.amazonaws.com:/home/ubuntu/workspace/MelNet/datasets/`
-
-2. Install ffmpeg
-`sudo apt update`
-`sudo apt install ffmpeg`
-Check ffmpeg version with ffmpeg -version
+2. Run the setup script
+`sh setup.sh`
 
 3.  Run the thing
 
-`python trainer.py -c ./config/kss.yaml -n kss_t1_b1 -t 1 -b 1 -s TTS`
-`python trainer.py -c ./config/kss.yaml -n kss_t2_b4 -t 2 -b 4 -s TTS`
+`screen`
+`python trainer.py -c ./config/blizzard.yaml -n blizzard_t1_b1 -t 1 -b 2 -s TTS`
+`python trainer.py -c ./config/blizzard.yaml -n blizzard_t6_b1 -t 6 -b 1 -s TTS`
 
 4. Copy the file back to laptop before shutting the instance down
 

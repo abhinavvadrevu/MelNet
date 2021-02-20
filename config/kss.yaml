@@ -40,3 +40,4 @@ log:
   summary_interval: 1
   chkpt_dir: 'chkpt'
   log_dir: 'logs'
+  

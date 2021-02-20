@@ -4,10 +4,10 @@ from pathlib import Path
 import os
 
 paths = [
-  'https://data.cstr.ed.ac.uk/blizzard2013/lessac/README_for_Lessac_Blizzard2013_CatherineByers_train',
-  'https://data.cstr.ed.ac.uk/blizzard2013/lessac/BC2013_segmented_v0_txt1.zip',
-  'https://data.cstr.ed.ac.uk/blizzard2013/lessac/BC2013_segmented_v0_txt2.zip',
-  'https://data.cstr.ed.ac.uk/blizzard2013/lessac/BC2013_segmented_v0_wav1.zip',
+  # 'https://data.cstr.ed.ac.uk/blizzard2013/lessac/README_for_Lessac_Blizzard2013_CatherineByers_train',
+  # 'https://data.cstr.ed.ac.uk/blizzard2013/lessac/BC2013_segmented_v0_txt1.zip',
+  # 'https://data.cstr.ed.ac.uk/blizzard2013/lessac/BC2013_segmented_v0_txt2.zip',
+  # 'https://data.cstr.ed.ac.uk/blizzard2013/lessac/BC2013_segmented_v0_wav1.zip',
   'https://data.cstr.ed.ac.uk/blizzard2013/lessac/BC2013_segmented_v0_wav2.zip',
   'https://data.cstr.ed.ac.uk/blizzard2013/lessac/BC2013_segmented_v1_labels_EM.zip',
   'https://data.cstr.ed.ac.uk/blizzard2013/lessac/BC2013_segmented_v1_transcripts_selection.zip',
@@ -25,8 +25,9 @@ paths = [
 ]
 
 for path in paths:
-  resp = requests.get(path, allow_redirects=True, auth=('abhinavvadrevu1@gmail.com', 'FHe6f1xfXcfoH'))
+  print("Downloading %s" % path)
   dir_path = os.path.join('./datasets', urlparse(path).path[1::])
   Path(dir_path).parent.mkdir(parents=True, exist_ok=True)
+  resp = requests.get(path, allow_redirects=True, auth=('abhinavvadrevu1@gmail.com', 'FHe6f1xfXcfoH'))
   open(dir_path, 'wb').write(resp.content)
-  break
+  print("%s was successfully downloaded" % path)
