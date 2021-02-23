@@ -1,18 +1,18 @@
 1. Copy over the setup script
-MACHINE="ec2-54-157-191-54.compute-1.amazonaws.com"
-`scp -i ~/.ssh/chronicle-test-keys.pem ~/workspace/MelNet/setup.sh ubuntu@$MACHINE:/home/ubuntu/`
+MACHINE="ec2-34-227-76-74.compute-1.amazonaws.com"
+scp -i ~/.ssh/chronicle-test-keys.pem ~/workspace/MelNet/setup.sh ubuntu@$MACHINE:/home/ubuntu/
 
 2. Run the setup script
-`sh setup.sh`
+sh setup.sh
 
 3.  Run the thing
 
-`screen`
-`python trainer.py -c ./config/blizzard.yaml -n blizzard_t1_b1 -t 1 -b 2 -s TTS`
-`python trainer.py -c ./config/blizzard.yaml -n blizzard_t6_b1 -t 6 -b 1 -s TTS`
+screen
+python trainer.py -c ./config/blizzard.yaml -n blizzard_t1_b1 -t 1 -b 2 -s TTS
+python trainer.py -c ./config/blizzard.yaml -n blizzard_t6_b1 -t 6 -b 1 -s TTS
 
 4. Copy the file back to laptop before shutting the instance down
 
-`scp -i ~/.ssh/chronicle-test-keys.pem ubuntu@ec2-54-157-191-54.compute-1.amazonaws.com:/home/ubuntu/workspace/MelNet/chkpt ~/workspace/MelNet/chkpt`
+scp -i ~/.ssh/chronicle-test-keys.pem ubuntu@ec2-54-157-191-54.compute-1.amazonaws.com:/home/ubuntu/workspace/MelNet/chkpt ~/workspace/MelNet/chkpt
 
-5. `python inference.py -c ./config/kss.yaml -p ./config/inference.yaml -t [timestep of generated mel spectrogram] -n [name of sample] -i [input sentence for conditional generation]`
+5. python inference.py -c ./config/kss.yaml -p ./config/inference.yaml -t [timestep of generated mel spectrogram] -n [name of sample] -i [input sentence for conditional generation]
