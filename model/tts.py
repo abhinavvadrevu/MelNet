@@ -127,7 +127,7 @@ class TTS(nn.Module):
             total_length=total_length
         )
         return unpacked
-        
+
     def forward(self, x, text, text_lengths, audio_lengths):
         # Extract memory
         memory = self.text_encode(text, text_lengths)
