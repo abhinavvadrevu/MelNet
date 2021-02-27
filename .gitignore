@@ -4,7 +4,7 @@
 config/*
 !config/voxceleb2.yaml
 !config/blizzard.yaml
-!config/blizzard-5-tier.yaml
+!config/blizzard-4-tier.yaml
 !config/inference.yaml
 !config/kss.yaml
 

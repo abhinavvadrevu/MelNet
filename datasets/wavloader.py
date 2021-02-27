@@ -119,6 +119,17 @@ class AudioTextDataset(Dataset):
                     length = get_length(wav_path, hp.audio.sr)
                     if length < hp.audio.duration:
                         self.dataset.append((wav_path, sentence))
+
+        elif hp.data.name == 'Blizzard-4-tier':
+            with open(os.path.join(self.root_dir, 'prompts.gui'), 'r') as f:
+                lines = f.read().splitlines()
+                filenames = lines[::3]
+                sentences = lines[1::3]
+                for filename, sentence in tqdm(zip(filenames, sentences), total=len(filenames)):
+                    wav_path = os.path.join(self.root_dir, 'wavn', filename + '.wav')
+                    length = get_length(wav_path, hp.audio.sr)
+                    if length < hp.audio.duration:
+                        self.dataset.append((wav_path, sentence))
         else:
             raise NotImplementedError
 
@@ -145,6 +156,8 @@ class AudioTextDataset(Dataset):
         elif self.hp.data.name == 'Blizzard':
             seq = process_blizzard(text)
         elif self.hp.data.name == 'Blizzard-5-tier':
+            seq = process_blizzard(text)
+        elif self.hp.data.name == 'Blizzard-4-tier':
             seq = process_blizzard(text)
 
         wav = read_wav_np(self.dataset[idx][0], sample_rate=self.hp.audio.sr)
