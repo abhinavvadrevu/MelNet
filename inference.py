@@ -32,7 +32,7 @@ if __name__ == '__main__':
     assert args.timestep % t_div[hp.model.tier] == 0, \
         "timestep should be divisible by %d, got %d" % (t_div[hp.model.tier], args.timestep)
 
-    model = MelNet(hp, args, infer_hp).cuda()
+    model = MelNet(hp, args, infer_hp)
     model.load_tiers()
     model.eval()
 

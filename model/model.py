@@ -45,7 +45,7 @@ class MelNet(nn.Module):
                     tierN=tier
                 ) for tier in range(1, hp.model.tier + 1)]
         self.tiers = nn.ModuleList(
-            [None] + [nn.DataParallel(tier).cuda() for tier in self.tiers]
+            [None] + [nn.DataParallel(tier) for tier in self.tiers]
         )
 
     def forward(self, x, tier_num):
@@ -56,17 +56,17 @@ class MelNet(nn.Module):
     def sample(self, condition):
         x = None
         seq = torch.from_numpy(text_to_sequence(condition)).long().unsqueeze(0)
-        input_lengths = torch.LongTensor([seq[0].shape[0]]).cuda()
-        audio_lengths = torch.LongTensor([0]).cuda()
+        input_lengths = torch.LongTensor([seq[0].shape[0]])
+        audio_lengths = torch.LongTensor([0])
 
         ## Tier 1 ##
         tqdm.write('Tier 1')
         for t in tqdm(range(self.args.timestep // self.t_div)):
             audio_lengths += 1
             if x is None:
-                x = torch.zeros((1, self.n_mels // self.f_div, 1)).cuda()
+                x = torch.zeros((1, self.n_mels // self.f_div, 1))
             else:
-                x = torch.cat([x, torch.zeros((1, self.n_mels // self.f_div, 1)).cuda()], dim=-1)
+                x = torch.cat([x, torch.zeros((1, self.n_mels // self.f_div, 1))], dim=-1)
             for m in tqdm(range(self.n_mels // self.f_div)):
                 torch.cuda.synchronize()
                 if self.infer_hp.conditional:
@@ -87,8 +87,11 @@ class MelNet(nn.Module):
 
     def load_tiers(self):
         for idx, chkpt_path in enumerate(self.infer_hp.checkpoints):
-            checkpoint = torch.load(chkpt_path)
+            checkpoint = torch.load(chkpt_path, map_location=torch.device('cpu'))
             hp = load_hparam_str(checkpoint['hp_str'])
+            print('hp:')
+            print(hp)
+            print('\n\n')
 
             if self.hp != hp:
                 print('Warning: hp different in file %s' % chkpt_path)
@@ -99,5 +102,8 @@ class MelNet(nn.Module):
             print(idx+1)
             # print(self.tiers)
             print(self.tiers[idx+1])
-
-            self.tiers[idx+1].load_state_dict(checkpoint['model'])
+            checkpointed_model = checkpoint['model']
+            print('Keys:')
+            print(checkpointed_model.keys())
+            print('')
+            self.tiers[idx+1].load_state_dict(checkpointed_model)
