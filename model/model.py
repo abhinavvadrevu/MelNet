@@ -93,4 +93,11 @@ class MelNet(nn.Module):
             if self.hp != hp:
                 print('Warning: hp different in file %s' % chkpt_path)
             
+            print("Looking for:")
+            print(chkpt_path)
+            print("Tier")
+            print(idx+1)
+            # print(self.tiers)
+            print(self.tiers[idx+1])
+
             self.tiers[idx+1].load_state_dict(checkpoint['model'])
