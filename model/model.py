@@ -70,6 +70,7 @@ class MelNet(nn.Module):
             for m in tqdm(range(self.n_mels // self.f_div)):
                 torch.cuda.synchronize()
                 if self.infer_hp.conditional:
+                    print((x, seq, input_lengths, audio_lengths))
                     mu, std, pi, _ = self.tiers[1](x, seq, input_lengths, audio_lengths)
                 else:
                     mu, std, pi = self.tiers[1](x, audio_lengths)
@@ -93,11 +94,11 @@ class MelNet(nn.Module):
             if self.hp != hp:
                 print('Warning: hp different in file %s' % chkpt_path)
             
-            print("Looking for:")
-            print(chkpt_path)
-            print("Tier")
-            print(idx+1)
-            # print(self.tiers)
-            print(self.tiers[idx+1])
+            # print("Looking for:")
+            # print(chkpt_path)
+            # print("Tier")
+            # print(idx+1)
+            # # print(self.tiers)
+            # print(self.tiers[idx+1])
 
             self.tiers[idx+1].load_state_dict(checkpoint['model'])
