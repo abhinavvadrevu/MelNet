@@ -1,9 +1,7 @@
 tier: 3
 checkpoints: [
-  'chkpt-5-tier/blizzard_t1/blizzard_t1_9ce14e7_tier1_003.pt',
-  'chkpt-5-tier/blizzard_t2/blizzard_t2_9ce14e7_tier2_002.pt',
-  'chkpt-5-tier/blizzard_t3/blizzard_t3_9ce14e7_tier3_002.pt',
-  'chkpt-5-tier/blizzard_t4/blizzard_t4_9ce14e7_tier4_002.pt',
-  'chkpt-5-tier/blizzard_t5/blizzard_t5_9ce14e7_tier5_005.pt'
+  'chkpt_3_tier/blizzard_3tier_t1_withTTS/blizzard_3tier_t1_withTTS_9ce14e7_tier1_001.pt',
+  'chkpt_3_tier/blizzard_3tier_t2_noTTS/blizzard_3tier_t2_noTTS_9ce14e7_tier2_000.pt',
+  'chkpt_3_tier/blizzard_3tier_t3_noTTS/blizzard_3tier_t3_noTTS_9ce14e7_tier3_000.pt'
 ]
 conditional: True

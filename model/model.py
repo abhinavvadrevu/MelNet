@@ -46,7 +46,6 @@ class MelNet(nn.Module):
                 ) for tier in range(1, hp.model.tier + 1)]
         self.tiers = nn.ModuleList(
             [None] + [nn.DataParallel(tier) for tier in self.tiers]
-            # [None] + [tier for tier in self.tiers]
         )
 
     def forward(self, x, tier_num):
@@ -69,7 +68,7 @@ class MelNet(nn.Module):
             else:
                 x = torch.cat([x, torch.zeros((1, self.n_mels // self.f_div, 1))], dim=-1)
             for m in tqdm(range(self.n_mels // self.f_div)):
-                torch.cuda.synchronize()
+                # torch.cuda.synchronize()
                 if self.infer_hp.conditional:
                     mu, std, pi, _ = self.tiers[1](x, seq, input_lengths, audio_lengths)
                 else:
@@ -95,17 +94,13 @@ class MelNet(nn.Module):
                 print('Warning: hp different in file %s' % chkpt_path)
             
             checkpointed_model = checkpoint['model']
-            # for key in list(checkpointed_model.keys()):
-            #     if 'module.' in key:
-            #         checkpointed_model[key.replace('module.', '')] = checkpointed_model[key]
-            #         del checkpointed_model[key]
 
-            print("Tier " + str(idx+1))
-            print(self.tiers[idx+1])
-            print("\n\n")
-            print("hp strings:")
-            print(self.hp)
-            print(hp)
-            print("\n\n")
+            # print("Tier " + str(idx+1))
+            # print(self.tiers[idx+1])
+            # print("\n\n")
+            # print("hp strings:")
+            # print(self.hp)
+            # print(hp)
+            # print("\n\n")
             
             self.tiers[idx+1].load_state_dict(checkpointed_model)
