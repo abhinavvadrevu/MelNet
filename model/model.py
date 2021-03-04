@@ -46,6 +46,7 @@ class MelNet(nn.Module):
                 ) for tier in range(1, hp.model.tier + 1)]
         self.tiers = nn.ModuleList(
             [None] + [nn.DataParallel(tier) for tier in self.tiers]
+            # [None] + [tier for tier in self.tiers]
         )
 
     def forward(self, x, tier_num):
@@ -89,21 +90,22 @@ class MelNet(nn.Module):
         for idx, chkpt_path in enumerate(self.infer_hp.checkpoints):
             checkpoint = torch.load(chkpt_path, map_location=torch.device('cpu'))
             hp = load_hparam_str(checkpoint['hp_str'])
-            print('hp:')
-            print(hp)
-            print('\n\n')
-
+            
             if self.hp != hp:
                 print('Warning: hp different in file %s' % chkpt_path)
             
-            print("Looking for:")
-            print(chkpt_path)
-            print("Tier")
-            print(idx+1)
-            # print(self.tiers)
-            print(self.tiers[idx+1])
             checkpointed_model = checkpoint['model']
-            print('Keys:')
-            print(checkpointed_model.keys())
-            print('')
+            # for key in list(checkpointed_model.keys()):
+            #     if 'module.' in key:
+            #         checkpointed_model[key.replace('module.', '')] = checkpointed_model[key]
+            #         del checkpointed_model[key]
+
+            print("Tier " + str(idx+1))
+            print(self.tiers[idx+1])
+            print("\n\n")
+            print("hp strings:")
+            print(self.hp)
+            print(hp)
+            print("\n\n")
+            
             self.tiers[idx+1].load_state_dict(checkpointed_model)
