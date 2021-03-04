@@ -97,11 +97,7 @@ class TTS(nn.Module):
 
         if self.hp.data.name == 'KSS':
             self.embedding_text = nn.Embedding(len(symbols), hp.model.hidden)
-        elif self.hp.data.name == 'Blizzard':
-            self.embedding_text = nn.Embedding(len(en_symbols), hp.model.hidden)
-        elif self.hp.data.name == 'Blizzard-5-tier':
-            self.embedding_text = nn.Embedding(len(en_symbols), hp.model.hidden)
-        elif self.hp.data.name == 'Blizzard-4-tier':
+        elif self.hp.data.name.startswith('Blizzard'):
             self.embedding_text = nn.Embedding(len(en_symbols), hp.model.hidden)
         else:
             raise NotImplementedError
