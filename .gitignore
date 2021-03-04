@@ -20,6 +20,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 .zip
+.pt
+chkpt*
 
 # C extensions
 *.so
