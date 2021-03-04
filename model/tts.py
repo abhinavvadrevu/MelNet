@@ -113,6 +113,10 @@ class TTS(nn.Module):
 
     def text_encode(self, text, text_lengths):
         total_length = text.size(1)
+        # print('text_encode:')
+        # print(text)
+        # print(text_lengths)
+        # print(total_length)
         embed = self.embedding_text(text)
         packed = nn.utils.rnn.pack_padded_sequence(
             embed,

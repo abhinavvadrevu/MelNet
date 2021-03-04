@@ -12,6 +12,7 @@ from utils.gmm import sample_gmm
 from utils.constant import f_div, t_div
 from utils.hparams import load_hparam_str
 from utils.tierutil import TierUtil
+from utils.utils import process_blizzard
 
 
 class MelNet(nn.Module):
@@ -55,8 +56,10 @@ class MelNet(nn.Module):
 
     def sample(self, condition):
         x = None
-        seq = torch.from_numpy(text_to_sequence(condition)).long().unsqueeze(0)
+        seq = torch.from_numpy(process_blizzard(condition)).long().unsqueeze(0)
         input_lengths = torch.LongTensor([seq[0].shape[0]])
+        print("seq:")
+        print(seq)
         audio_lengths = torch.LongTensor([0])
 
         ## Tier 1 ##
