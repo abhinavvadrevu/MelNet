@@ -12,6 +12,7 @@ from utils.gmm import sample_gmm
 from utils.constant import f_div, t_div
 from utils.hparams import load_hparam_str
 from utils.tierutil import TierUtil
+from utils.utils import process_blizzard
 
 
 class MelNet(nn.Module):
@@ -55,7 +56,7 @@ class MelNet(nn.Module):
 
     def sample(self, condition):
         x = None
-        seq = torch.from_numpy(text_to_sequence(condition)).long().unsqueeze(0)
+        seq = torch.from_numpy(process_blizzard(condition)).long().unsqueeze(0)
         input_lengths = torch.LongTensor([seq[0].shape[0]]).cuda()
         audio_lengths = torch.LongTensor([0]).cuda()
 
@@ -70,7 +71,7 @@ class MelNet(nn.Module):
             for m in tqdm(range(self.n_mels // self.f_div)):
                 torch.cuda.synchronize()
                 if self.infer_hp.conditional:
-                    print((x, seq, input_lengths, audio_lengths))
+                    # print((x, seq, input_lengths, audio_lengths))
                     mu, std, pi, _ = self.tiers[1](x, seq, input_lengths, audio_lengths)
                 else:
                     mu, std, pi = self.tiers[1](x, audio_lengths)
@@ -80,7 +81,7 @@ class MelNet(nn.Module):
         ## Tier 2~N ##
         for tier in tqdm(range(2, self.hp.model.tier + 1)):
             tqdm.write('Tier %d' % tier)
-            mu, std, pi = self.tiers[tier](x)
+            mu, std, pi = self.tiers[tier](x, audio_lengths)
             temp = sample_gmm(mu, std, pi)
             x = self.tierutil.interleave(x, temp, tier + 1)
 
