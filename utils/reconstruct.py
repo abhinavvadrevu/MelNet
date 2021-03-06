@@ -7,13 +7,13 @@ from tqdm import tqdm
 class Reconstruct():
     def __init__(self, hp):
         self.hp = hp
-        self.window = torch.hann_window(window_length=hp.audio.win_length).cuda()
+        self.window = torch.hann_window(window_length=hp.audio.win_length)
         self.mel_basis = librosa.filters.mel(
             sr=hp.audio.sr,
             n_fft=hp.audio.n_fft,
             n_mels=hp.audio.n_mels
         )
-        self.mel_basis = torch.from_numpy(self.mel_basis).cuda() # [n_mels, n_fft//2+1]
+        self.mel_basis = torch.from_numpy(self.mel_basis) # [n_mels, n_fft//2+1]
         self.criterion = torch.nn.MSELoss()
 
     def get_mel(self, x):
@@ -39,7 +39,7 @@ class Reconstruct():
         return x
 
     def inverse(self, melspectrogram, iters=1000):
-        x = torch.normal(0, 1e-6, size=((melspectrogram.size(1) - 1) * self.hp.audio.hop_length, )).cuda().requires_grad_()
+        x = torch.normal(0, 1e-6, size=((melspectrogram.size(1) - 1) * self.hp.audio.hop_length, )).requires_grad_()
         optimizer = torch.optim.LBFGS([x], tolerance_change=1e-16)
         melspectrogram = self.post_spec(melspectrogram)
 

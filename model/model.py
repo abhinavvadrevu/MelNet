@@ -64,6 +64,8 @@ class MelNet(nn.Module):
         tqdm.write('Tier 1')
         for t in tqdm(range(self.args.timestep // self.t_div)):
             audio_lengths += 1
+            # print('audio_lengths')
+            # print(audio_lengths)
             if x is None:
                 x = torch.zeros((1, self.n_mels // self.f_div, 1))
             else:
@@ -71,7 +73,6 @@ class MelNet(nn.Module):
             for m in tqdm(range(self.n_mels // self.f_div)):
                 # torch.cuda.synchronize()
                 if self.infer_hp.conditional:
-                    # print((x, seq, input_lengths, audio_lengths))
                     mu, std, pi, _ = self.tiers[1](x, seq, input_lengths, audio_lengths)
                 else:
                     mu, std, pi = self.tiers[1](x, audio_lengths)
@@ -95,16 +96,7 @@ class MelNet(nn.Module):
             if self.hp != hp:
                 print('Warning: hp different in file %s' % chkpt_path)
             
-<<<<<<< HEAD
             checkpointed_model = checkpoint['model']
-=======
-            # print("Looking for:")
-            # print(chkpt_path)
-            # print("Tier")
-            # print(idx+1)
-            # # print(self.tiers)
-            # print(self.tiers[idx+1])
->>>>>>> master
 
             # print("Tier " + str(idx+1))
             # print(self.tiers[idx+1])

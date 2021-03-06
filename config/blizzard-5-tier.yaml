@@ -1,7 +1,7 @@
 model:
   tier: 5
-  layers: [8, 5, 4, 3, 2]
-  hidden: 128
+  layers: [6, 5, 4, 3, 2]
+  hidden: 256
   gmm: 10
 ---
 data:
