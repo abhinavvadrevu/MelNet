@@ -17,8 +17,36 @@ from .tierutil import TierUtil
 from .constant import f_div, t_div
 from .validation import validate
 
-
 def train(args, pt_dir, chkpt_path, trainloader, testloader, writer, logger, hp, hp_str):
+    # If the train-all flag is set, train all tiers one-by-one. Otherwise, just train one tier.
+    # if the train-all flag is set, start training at the tier specified, and work down from there.
+    if args.train_all:
+        num_tiers = hp['model']['tier']
+        cur_tier = args.tier
+        main_name = args.name
+        i = 1
+        while True:
+            print("Training tier #%d" % cur_tier)
+            if cur_tier == 1:
+                args.tts = True
+            else:
+                args.tts = False
+            args.name = main_name + ("_tier%d" % cur_tier)
+            args.tier = cur_tier
+            print("Beginning training tier %d, with the name %s and tts=%s. This is iteration #%d." % (args.tier, args.name, str(args.tts), i))
+            train_helper(args, pt_dir, chkpt_path, trainloader, testloader, writer, logger, hp, hp_str)
+            cur_tier -= 1
+            if cur_tier == 0:
+                print("All tiers were trained an epoch! Starting again at top tier.")
+                cur_tier = num_tiers
+            print('')
+            i += 1
+    else:
+        print("Training a specific tier")
+        train_helper(args, pt_dir, chkpt_path, trainloader, testloader, writer, logger, hp, hp_str)
+    return
+
+def train_helper(args, pt_dir, chkpt_path, trainloader, testloader, writer, logger, hp, hp_str):
     if args.tts:
         model = TTS(
             hp=hp,
