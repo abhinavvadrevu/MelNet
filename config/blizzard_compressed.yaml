@@ -12,7 +12,7 @@ data:
 audio:
   sr: 7000
   duration: 6.0
-  n_mels: 180
+  n_mels: 200
   hop_length: 150
   win_length: 1080
   n_fft: 1080

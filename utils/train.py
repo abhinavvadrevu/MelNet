@@ -44,7 +44,6 @@ def train(args, pt_dir, chkpt_path, trainloader, testloader, writer, logger, hp,
     else:
         print("Training a specific tier")
         train_helper(args, pt_dir, chkpt_path, trainloader, testloader, writer, logger, hp, hp_str)
-    return
 
 def train_helper(args, pt_dir, chkpt_path, trainloader, testloader, writer, logger, hp, hp_str):
     if args.tts:
