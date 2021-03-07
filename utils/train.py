@@ -113,7 +113,12 @@ def train_helper(args, pt_dir, chkpt_path, trainloader, testloader, writer, logg
         model.train()
         optimizer.zero_grad()
         loss_sum = 0
-        for epoch in itertools.count(init_epoch + 1):
+
+        epochs_to_train_on = itertools.count(init_epoch + 1)
+        if args.train_all:
+            epochs_to_train_on = [init_epoch + 1]
+
+        for epoch in epochs_to_train_on:
             loader = tqdm(trainloader, desc='Train data loader', dynamic_ncols=True)
             for input_tuple in loader:
                 if args.tts:
