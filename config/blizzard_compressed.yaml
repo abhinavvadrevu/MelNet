@@ -1,6 +1,6 @@
 model:
-  tier: 6
-  layers: [6, 5, 4, 3, 2, 2]
+  tier: 5
+  layers: [5, 4, 3, 2, 2]
   hidden: 256
   gmm: 10
 ---
@@ -12,7 +12,7 @@ data:
 audio:
   sr: 7000
   duration: 6.0
-  n_mels: 200
+  n_mels: 180
   hop_length: 150
   win_length: 1080
   n_fft: 1080

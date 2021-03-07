@@ -71,7 +71,6 @@ class MelNet(nn.Module):
             for m in tqdm(range(self.n_mels // self.f_div)):
                 torch.cuda.synchronize()
                 if self.infer_hp.conditional:
-                    # print((x, seq, input_lengths, audio_lengths))
                     mu, std, pi, _ = self.tiers[1](x, seq, input_lengths, audio_lengths)
                 else:
                     mu, std, pi = self.tiers[1](x, audio_lengths)

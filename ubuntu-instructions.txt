@@ -21,4 +21,4 @@ scp -r -i ~/.ssh/chronicle-test-keys.pem ubuntu@$MACHINE:/home/ubuntu/workspace/
 
 5. python inference.py -c ./config/kss.yaml -p ./config/inference.yaml -t [timestep of generated mel spectrogram] -n [name of sample] -i [input sentence for conditional generation]
 
-python inference.py -c config/blizzard-5-tier.yaml -p config/inference.yaml -t 512 -n butts_blizzard_5_tier -i "I like big butts, and I cannot lie."
+python inference.py -c config/blizzard_compressed.yaml -p config/inference.yaml -t 128 -n butts_blizzard_compressed -i "I like big butts, and I cannot lie."
