@@ -2,8 +2,8 @@ mkdir workspace
 cd workspace
 git clone https://github.com/abhinavvadrevu/MelNet.git
 cd MelNet/datasets
-curl https://blizzard2013.s3.amazonaws.com/blizzard2013/lessac/segmented_training_data.zip -O .
-unzip segmented_training_data.zip
+curl https://blizzard2013.s3.amazonaws.com/blizzard2013/lessac/segmented_compressed.zip -O .
+unzip segmented_compressed.zip
 cd ..
 sudo apt update
 # sudo killall apt apt-get

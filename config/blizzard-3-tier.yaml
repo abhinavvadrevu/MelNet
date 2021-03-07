@@ -1,11 +1,11 @@
 model:
-  tier: 6
-  layers: [6, 5, 4, 3, 2, 2]
-  hidden: 512
+  tier: 3
+  layers: [5, 4, 3]
+  hidden: 64
   gmm: 10
 ---
 data:
-  name: 'Blizzard'
+  name: 'Blizzard-3-tier'
   path: './datasets/segmented'
   extension: '*.wav'
 ---

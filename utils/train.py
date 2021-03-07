@@ -1,3 +1,4 @@
+import glob
 import os
 import math
 import torch
@@ -8,6 +9,7 @@ import traceback
 
 from tqdm import tqdm
 
+from datasets.wavloader import create_dataloader
 from model.tier import Tier
 from model.tts import TTS
 from model.loss import GMMLoss
@@ -17,8 +19,38 @@ from .tierutil import TierUtil
 from .constant import f_div, t_div
 from .validation import validate
 
+def train(args, pt_dir, chkpt_path, writer, logger, hp, hp_str):
+    # If the train-all flag is set, train all tiers one-by-one. Otherwise, just train one tier.
+    # if the train-all flag is set, start training at the tier specified, and work down from there.
+    if args.train_all:
+        num_tiers = hp['model']['tier']
+        cur_tier = args.tier
+        main_name = args.name
+        i = 1
+        while True:
+            print("Training tier #%d" % cur_tier)
+            if cur_tier == 1:
+                args.tts = True
+            else:
+                args.tts = False
+            args.tier = cur_tier
+            print("Beginning training tier %d, for %s with tts=%s. This is iteration #%d." % (args.tier, args.name, str(args.tts), i))
+            trainloader = create_dataloader(hp, args, train=True)
+            testloader = create_dataloader(hp, args, train=False)
+            train_helper(args, pt_dir, chkpt_path, trainloader, testloader, writer, logger, hp, hp_str)
+            cur_tier -= 1
+            if cur_tier == 0:
+                print("All tiers were trained an epoch! Starting again at top tier.")
+                cur_tier = num_tiers
+            print('')
+            i += 1
+    else:
+        print("Training a specific tier")
+        trainloader = create_dataloader(hp, args, train=True)
+        testloader = create_dataloader(hp, args, train=False)
+        train_helper(args, pt_dir, chkpt_path, trainloader, testloader, writer, logger, hp, hp_str)
 
-def train(args, pt_dir, chkpt_path, trainloader, testloader, writer, logger, hp, hp_str):
+def train_helper(args, pt_dir, chkpt_path, trainloader, testloader, writer, logger, hp, hp_str):
     if args.tts:
         model = TTS(
             hp=hp,
@@ -61,7 +93,15 @@ def train(args, pt_dir, chkpt_path, trainloader, testloader, writer, logger, hp,
     init_epoch = -1
     step = 0
 
+    file_pattern = os.path.join(pt_dir, '%s_%s_tier%d_[0-9][0-9][0-9].pt' % (args.name, githash, args.tier))
+    files = glob.glob(file_pattern)
+    if len(files) > 0:
+        last_epoch = max(map(lambda x: int(x[-6:-3]), files))
+        chkpt_file_path = '%s_%s_tier%d_%03d.pt' % (args.name, githash, args.tier, last_epoch)
+        chkpt_path = os.path.join(pt_dir, chkpt_file_path)
+
     if chkpt_path is not None:
+        print("Resuming training from checkpoint: %s" % chkpt_path)
         logger.info("Resuming from checkpoint: %s" % chkpt_path)
         checkpoint = torch.load(chkpt_path)
         model.load_state_dict(checkpoint['model'])
@@ -86,7 +126,12 @@ def train(args, pt_dir, chkpt_path, trainloader, testloader, writer, logger, hp,
         model.train()
         optimizer.zero_grad()
         loss_sum = 0
-        for epoch in itertools.count(init_epoch + 1):
+
+        epochs_to_train_on = itertools.count(init_epoch + 1)
+        if args.train_all:
+            epochs_to_train_on = [init_epoch + 1]
+
+        for epoch in epochs_to_train_on:
             loader = tqdm(trainloader, desc='Train data loader', dynamic_ncols=True)
             for input_tuple in loader:
                 if args.tts:
