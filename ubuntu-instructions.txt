@@ -11,7 +11,7 @@ sh setup.sh
 3.  Run the thing
 
 screen
-python trainer.py -c ./config/blizzard.yaml -n blizzard-6-tier_t6 -t 6 -b 1
+python trainer.py -c ./config/blizzard_compressed.yaml -n blizzard-compressed-6-tier_t6 -t 6 -b 1
 python trainer.py -c ./config/blizzard.yaml -n blizzard-6-tier_t1 -t 1 -b 1 -s TTS
 python trainer.py -c ./config/blizzard-5-tier.yaml -n blizzard_t5_noTTS -t 5 -b 1
 
