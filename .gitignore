@@ -1,7 +1,7 @@
 .idea/
 
 # configuration
-config/*
+# config/*
 !config/voxceleb2.yaml
 !config/blizzard.yaml
 !config/blizzard-4-tier.yaml
