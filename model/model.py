@@ -82,7 +82,8 @@ class MelNet(nn.Module):
         ## Tier 2~N ##
         for tier in tqdm(range(2, self.hp.model.tier + 1)):
             tqdm.write('Tier %d' % tier)
-            mu, std, pi = self.tiers[tier](x, audio_lengths)
+            print(self.tiers[tier])
+            mu, std, pi = self.tiers[tier](x)
             temp = sample_gmm(mu, std, pi)
             x = self.tierutil.interleave(x, temp, tier + 1)
 
@@ -94,6 +95,8 @@ class MelNet(nn.Module):
             hp = load_hparam_str(checkpoint['hp_str'])
             
             if self.hp != hp:
+                print(self.hp)
+                print(hp)
                 print('Warning: hp different in file %s' % chkpt_path)
             
             checkpointed_model = checkpoint['model']
