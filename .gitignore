@@ -11,6 +11,7 @@
 # logs, checkpoints
 chkpt/
 logs/
+temp_hw_6_tier_compressed/
 
 # just a temporary folder
 temp/
