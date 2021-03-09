@@ -1,5 +1,5 @@
 1. Copy over the setup script
-MACHINE="ec2-54-164-188-20.compute-1.amazonaws.com"
+MACHINE="ec2-107-23-247-221.compute-1.amazonaws.com"
 scp -i ~/.ssh/chronicle-test-keys.pem ~/workspace/MelNet/setup.sh ubuntu@$MACHINE:/home/ubuntu/
 
 1a. Copy over model files if necessary
