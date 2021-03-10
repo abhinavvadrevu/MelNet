@@ -43,7 +43,7 @@ def train(args, pt_dir, chkpt_path, writer, logger, hp, hp_str):
                 print("All tiers were trained an epoch! Starting again at top tier.")
                 cur_tier = num_tiers
             print('')
-            i = 1
+            i += 1
     else:
         print("Training a specific tier")
         trainloader = create_dataloader(hp, args, train=True)
