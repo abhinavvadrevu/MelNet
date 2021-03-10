@@ -86,7 +86,7 @@ class AudioTextDataset(Dataset):
         self.root_dir = hp.data.path
         self.dataset = []
         if hp.data.name == 'KSS':
-            with open(os.path.join(self.root_dir, 'transcript.v.1.3.txt'), 'r') as f:
+            with open(os.path.join(self.root_dir, 'transcript.v.1.4.txt'), 'r') as f:
                 lines = f.read().splitlines()
                 for line in tqdm(lines):
                     wav_name, _, _, text, length, _ = line.split('|')

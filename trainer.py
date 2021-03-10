@@ -24,6 +24,8 @@ if __name__ == '__main__':
                         help="Batch size")
     parser.add_argument('-s', '--tts', type=bool, default=False, required=False,
                         help="TTS")
+    parser.add_argument('-a', '--train-all', type=bool, default=False, required=False,
+                        help="Use this param to train all tiers of a TTS model")
     args = parser.parse_args()
 
     hp = HParam(args.config)
@@ -58,7 +60,5 @@ if __name__ == '__main__':
 
     assert hp.data.path != '', \
         'hp.data.path cannot be empty: please fill out your dataset\'s path in configuration yaml file.'
-    trainloader = create_dataloader(hp, args, train=True)
-    testloader = create_dataloader(hp, args, train=False)
 
-    train(args, pt_dir, args.checkpoint_path, trainloader, testloader, writer, logger, hp, hp_str)
+    train(args, pt_dir, args.checkpoint_path, writer, logger, hp, hp_str)

@@ -6,7 +6,7 @@ model:
 ---
 data:
   name: 'KSS'
-  path: ''
+  path: './datasets'
   extension: '*.wav'
 ---
 audio:
