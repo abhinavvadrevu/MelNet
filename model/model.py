@@ -56,12 +56,14 @@ class MelNet(nn.Module):
 
     def sample(self, condition):
         x = None
-        seq = torch.from_numpy(text_to_sequence(condition)).long().unsqueeze(0)
+        seq = torch.from_numpy(process_blizzard(condition)).long().unsqueeze(0)
         input_lengths = torch.LongTensor([seq[0].shape[0]]).cuda()
+        audio_lengths = torch.LongTensor([0]).cuda()
 
         ## Tier 1 ##
         tqdm.write('Tier 1')
         for t in tqdm(range(self.args.timestep // self.t_div)):
+            audio_lengths += 1
             if x is None:
                 x = torch.zeros((1, self.n_mels // self.f_div, 1)).cuda()
             else:
@@ -69,16 +71,23 @@ class MelNet(nn.Module):
             for m in tqdm(range(self.n_mels // self.f_div)):
                 torch.cuda.synchronize()
                 if self.infer_hp.conditional:
-                    mu, std, pi, _ = self.tiers[1](x, seq, input_lengths)
+                    mu, std, pi, _ = self.tiers[1](x, seq, input_lengths, audio_lengths)
+                    print('mu.shape')
+                    print(mu.shape)
+                    print('std.shape')
+                    print(std.shape)
+                    print('pi.shape')
+                    print(pi.shape)
                 else:
-                    mu, std, pi = self.tiers[1](x)
+                    mu, std, pi = self.tiers[1](x, audio_lengths)
                 temp = sample_gmm(mu, std, pi)
                 x[:, m, t] = temp[:, m, t]
 
         ## Tier 2~N ##
         for tier in tqdm(range(2, self.hp.model.tier + 1)):
             tqdm.write('Tier %d' % tier)
-            mu, std, pi = self.tiers[tier](x)
+            mu, std, pi = self.tiers[tier](x, audio_lengths)
+            # print(audio_lengths)
             temp = sample_gmm(mu, std, pi)
             x = self.tierutil.interleave(x, temp, tier + 1)
 
@@ -92,4 +101,11 @@ class MelNet(nn.Module):
             if self.hp != hp:
                 print('Warning: hp different in file %s' % chkpt_path)
             
+            # print("Looking for:")
+            # print(chkpt_path)
+            # print("Tier")
+            # print(idx+1)
+            # # print(self.tiers)
+            # print(self.tiers[idx+1])
+
             self.tiers[idx+1].load_state_dict(checkpoint['model'])

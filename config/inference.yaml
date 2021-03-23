@@ -1,10 +1,10 @@
 tier: 6
 checkpoints: [
-  'chkpt/blizzard-compressed-6-tier_t1_notts/blizzard-compressed-6-tier_t1_notts_5c30182_tier1_001.pt',
-  'chkpt/blizzard-compressed-6-tier_t2/blizzard-compressed-6-tier_t2_5c30182_tier2_000.pt',
-  'chkpt/blizzard-compressed-6-tier_t3/blizzard-compressed-6-tier_t3_5c30182_tier3_000.pt',
-  'chkpt/blizzard-compressed-6-tier_t4/blizzard-compressed-6-tier_t4_5c30182_tier4_000.pt',
-  'chkpt/blizzard-compressed-6-tier_t5/blizzard-compressed-6-tier_t5_5c30182_tier5_000.pt',
-  'chkpt/blizzard-compressed-6-tier_t6/blizzard-compressed-6-tier_t6_5c30182_tier6_000.pt',
+  'chkpt/kss/kss_5c30182_tier1_000.pt',
+  'chkpt/kss/kss_5c30182_tier2_000.pt',
+  'chkpt/kss/kss_5c30182_tier3_000.pt',
+  'chkpt/kss/kss_5c30182_tier4_000.pt',
+  'chkpt/kss/kss_5c30182_tier5_000.pt',
+  'chkpt/kss/kss_5c30182_tier6_000.pt',
 ]
-conditional: False
+conditional: True
