@@ -1,10 +1,10 @@
 tier: 6
 checkpoints: [
-  'chkpt_6tier_compressed_complete_garbage/blizzard-compressed-6-tiers/blizzard-compressed-6-tiers_tier1_fab6d2e_tier1_000.pt',
-  'chkpt_6tier_compressed_complete_garbage/blizzard-compressed-6-tiers/blizzard-compressed-6-tiers_tier2_fab6d2e_tier2_000.pt',
-  'chkpt_6tier_compressed_complete_garbage/blizzard-compressed-6-tiers/blizzard-compressed-6-tiers_tier3_fab6d2e_tier3_000.pt',
-  'chkpt_6tier_compressed_complete_garbage/blizzard-compressed-6-tiers/blizzard-compressed-6-tiers_tier4_fab6d2e_tier4_000.pt',
-  'chkpt_6tier_compressed_complete_garbage/blizzard-compressed-6-tiers/blizzard-compressed-6-tiers_tier5_fab6d2e_tier5_000.pt',
-  'chkpt_6tier_compressed_complete_garbage/blizzard-compressed-6-tiers/blizzard-compressed-6-tiers_tier6_fab6d2e_tier6_000.pt'
+  '../blizzard-compressed-6-tiers/blizzard-compressed-6-tiers_tier1_fab6d2e_tier1_000.pt',
+  '../blizzard-compressed-6-tiers/blizzard-compressed-6-tiers_tier2_fab6d2e_tier2_000.pt',
+  '../blizzard-compressed-6-tiers/blizzard-compressed-6-tiers_tier3_fab6d2e_tier3_000.pt',
+  '../blizzard-compressed-6-tiers/blizzard-compressed-6-tiers_tier4_fab6d2e_tier4_000.pt',
+  '../blizzard-compressed-6-tiers/blizzard-compressed-6-tiers_tier5_fab6d2e_tier5_000.pt',
+  '../blizzard-compressed-6-tiers/blizzard-compressed-6-tiers_tier6_fab6d2e_tier6_000.pt'
 ]
 conditional: True

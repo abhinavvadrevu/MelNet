@@ -1,0 +1,24 @@
+Set the instance name and public address
+    VM_NAME="chronicle-test2-vm"
+    VM_ADDRESS="34.122.37.112"
+
+Grant the instance access roles at the instance level by using
+
+    gcloud compute instances add-iam-policy-binding $VM_NAME --member='user:abhinav@gooty.co' --role='roles/compute.osAdminLogin' --zone=us-central1-b
+
+To connect to instance via terminal:
+
+    gcloud compute ssh --project=chronicle-306003 $VM_NAME
+
+To login via ssh command:
+
+    ssh -i ~/.ssh/google_compute_engine abhinav_gooty_co@$VM_ADDRESS
+
+
+
+======= One-time commands =======
+
+To add SSH keys to account (probably just a one-time command)
+    gcloud compute os-login ssh-keys add \
+      --key-file=/Users/abhinavvadrevu/.ssh/google_compute_engine.pub \
+      --ttl=0
