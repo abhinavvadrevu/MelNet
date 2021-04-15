@@ -23,6 +23,7 @@ __pycache__/
 *$py.class
 .zip
 .pt
+*.pt
 chkpt*
 
 # C extensions

@@ -1,20 +1,49 @@
-Set the instance name and public address
-    VM_NAME="chronicle-test2-vm"
-    VM_ADDRESS="34.122.37.112"
+First kick off an instance from here: https://console.cloud.google.com/marketplace/details/click-to-deploy-images/deeplearning?_ga=2.159550910.264528323.1617829680-635932366.1617487109
+OR:
+    export IMAGE_FAMILY="pytorch-1-6-cu110"
+    export ZONE="us-central1-b"
+    export INSTANCE_NAME="chronicle-t4-test"
+
+    gcloud compute instances create $INSTANCE_NAME \
+      --zone=$ZONE \
+      --image-family=$IMAGE_FAMILY \
+      --image-project=deeplearning-platform-release \
+      --maintenance-policy=TERMINATE \
+      --accelerator="type=nvidia-tesla-t4,count=1" \
+      --metadata="install-nvidia-driver=True" \
+      --boot-disk-size=500GB \
+      --machine-type=n1-highcpu-2
+
+Set the public address
+    VM_ADDRESS=`gcloud compute instances describe $INSTANCE_NAME --zone=$ZONE --format='get(networkInterfaces[0].accessConfigs[0].natIP)'`
 
 Grant the instance access roles at the instance level by using
 
-    gcloud compute instances add-iam-policy-binding $VM_NAME --member='user:abhinav@gooty.co' --role='roles/compute.osAdminLogin' --zone=us-central1-b
+    gcloud compute instances add-iam-policy-binding $INSTANCE_NAME --member='user:abhinav@gooty.co' --role='roles/compute.osAdminLogin' --zone=$ZONE
 
 To connect to instance via terminal:
 
-    gcloud compute ssh --project=chronicle-306003 $VM_NAME
+    gcloud compute ssh --project=chronicle-306003 $INSTANCE_NAME
 
 To login via ssh command:
 
     ssh -i ~/.ssh/google_compute_engine abhinav_gooty_co@$VM_ADDRESS
 
+To copy setup instructions:
+    
+    scp -i ~/.ssh/google_compute_engine ~/workspace/MelNet/setup.sh abhinav_gooty_co@$VM_ADDRESS:/home/abhinav_gooty_co/
 
+To run training:
+
+    python trainer.py -c ./config/blizzard.yaml -n blizzard-t1 -t 1 -b 16 -s TTS
+
+To list instances:
+
+    gcloud compute instances list
+
+To delete instance:
+
+    gcloud compute instances delete $INSTANCE_NAME --zone=$ZONE
 
 ======= One-time commands =======
 

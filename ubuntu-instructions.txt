@@ -1,5 +1,5 @@
 1. Copy over the setup script
-MACHINE="ec2-54-164-188-20.compute-1.amazonaws.com"
+MACHINE="ec2-18-207-231-98.compute-1.amazonaws.com"
 scp -i ~/.ssh/chronicle-test-keys.pem ~/workspace/MelNet/setup.sh ubuntu@$MACHINE:/home/ubuntu/
 
 1a. Copy over model files if necessary
@@ -14,6 +14,7 @@ screen
 python trainer.py -c ./config/blizzard_compressed.yaml -n blizzard-compressed-6-tier_t6 -t 6 -b 1
 python trainer.py -c ./config/blizzard.yaml -n blizzard-6-tier_t1 -t 1 -b 1 -s TTS
 python trainer.py -c ./config/blizzard-5-tier.yaml -n blizzard_t5_noTTS -t 5 -b 1
+python trainer.py -c ./config/blizzard-5-tier.yaml -n blizzard_t5_noTTS -t 5 -b 1
 
 4. Copy the file back to laptop before shutting the instance down
 
@@ -21,4 +22,6 @@ scp -r -i ~/.ssh/chronicle-test-keys.pem ubuntu@$MACHINE:/home/ubuntu/workspace/
 
 5. python inference.py -c ./config/kss.yaml -p ./config/inference.yaml -t [timestep of generated mel spectrogram] -n [name of sample] -i [input sentence for conditional generation]
 
-python inference.py -c config/blizzard_compressed.yaml -p config/inference.yaml -t 128 -n butts_blizzard_compressed -i "I like big butts, and I cannot lie."
+python inference.py -c config/blizzard_compressed.yaml -p config/inference.yaml -t 64 -n hw_blizzard_compressed -i "Hello, world."
+
+python inference.py -c config/kss.yaml -p config/inference.yaml -t 64 -n kss_hw -i "안녕하세요, 세계"

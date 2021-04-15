@@ -6,7 +6,7 @@ model:
 ---
 data:
   name: 'Blizzard'
-  path: './datasets/segmented'
+  path: './datasets/segmented_compressed' # TODO: change to uncompressed version
   extension: '*.wav'
 ---
 audio:
