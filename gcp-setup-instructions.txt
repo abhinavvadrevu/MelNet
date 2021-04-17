@@ -2,7 +2,8 @@ First kick off an instance from here: https://console.cloud.google.com/marketpla
 OR:
     export IMAGE_FAMILY="pytorch-1-6-cu110"
     export ZONE="us-central1-b"
-    export INSTANCE_NAME="chronicle-t4-test"
+    export INSTANCE_NAME="chronicle-t4"
+    # export INSTANCE_NAME="chronicle-a100"
 
     gcloud compute instances create $INSTANCE_NAME \
       --zone=$ZONE \
@@ -10,9 +11,11 @@ OR:
       --image-project=deeplearning-platform-release \
       --maintenance-policy=TERMINATE \
       --accelerator="type=nvidia-tesla-t4,count=1" \
+      # --accelerator="type=nvidia-tesla-a100,count=1" \
       --metadata="install-nvidia-driver=True" \
       --boot-disk-size=500GB \
       --machine-type=n1-highcpu-2
+      # --machine-type=a2-highgpu-1g
 
 Set the public address
     VM_ADDRESS=`gcloud compute instances describe $INSTANCE_NAME --zone=$ZONE --format='get(networkInterfaces[0].accessConfigs[0].natIP)'`
@@ -23,7 +26,7 @@ Grant the instance access roles at the instance level by using
 
 To connect to instance via terminal:
 
-    gcloud compute ssh --project=chronicle-306003 $INSTANCE_NAME
+    gcloud compute ssh --project=chronicle-306003 $INSTANCE_NAME --zone $ZONE
 
 To login via ssh command:
 
@@ -44,6 +47,10 @@ To list instances:
 To delete instance:
 
     gcloud compute instances delete $INSTANCE_NAME --zone=$ZONE
+
+To copy data back to my laptop
+
+    scp -r -i ~/.ssh/google_compute_engine abhinav_gooty_co@$VM_ADDRESS:/home/abhinav_gooty_co/workspace/MelNet/logs/blizzard-compressed-t6 ~/workspace/MelNet/logs
 
 ======= One-time commands =======
 
