@@ -2,20 +2,20 @@ First kick off an instance from here: https://console.cloud.google.com/marketpla
 OR:
     export IMAGE_FAMILY="pytorch-1-6-cu110"
     export ZONE="us-central1-b"
-    export INSTANCE_NAME="chronicle-t4"
-    # export INSTANCE_NAME="chronicle-a100"
+    # export INSTANCE_NAME="chronicle-t4"
+    export INSTANCE_NAME="chronicle-a100-2"
 
     gcloud compute instances create $INSTANCE_NAME \
       --zone=$ZONE \
       --image-family=$IMAGE_FAMILY \
       --image-project=deeplearning-platform-release \
       --maintenance-policy=TERMINATE \
-      --accelerator="type=nvidia-tesla-t4,count=1" \
-      # --accelerator="type=nvidia-tesla-a100,count=1" \
       --metadata="install-nvidia-driver=True" \
       --boot-disk-size=500GB \
-      --machine-type=n1-highcpu-2
-      # --machine-type=a2-highgpu-1g
+      --accelerator="type=nvidia-tesla-a100,count=1" \
+      --machine-type=a2-highgpu-1g
+      # --accelerator="type=nvidia-tesla-t4,count=1" \
+      # --machine-type=n2-highcpu-2
 
 Set the public address
     VM_ADDRESS=`gcloud compute instances describe $INSTANCE_NAME --zone=$ZONE --format='get(networkInterfaces[0].accessConfigs[0].natIP)'`
@@ -32,13 +32,14 @@ To login via ssh command:
 
     ssh -i ~/.ssh/google_compute_engine abhinav_gooty_co@$VM_ADDRESS
 
-To copy setup instructions:
+To copy setup instructions and credentials:
     
     scp -i ~/.ssh/google_compute_engine ~/workspace/MelNet/setup.sh abhinav_gooty_co@$VM_ADDRESS:/home/abhinav_gooty_co/
+    scp -i ~/.ssh/google_compute_engine ~/.aws abhinav_gooty_co@$VM_ADDRESS:/home/abhinav_gooty_co/
 
 To run training:
 
-    python trainer.py -c ./config/blizzard_compressed.yaml -n blizzard-compressed-12layers-t2 -t 2 -b 2
+    python trainer.py -c ./config/blizzard_compressed.yaml -n blizzard-compressed-12layers-t2 -t 2 -b 1
 
 To list instances:
 
@@ -50,7 +51,7 @@ To delete instance:
 
 To copy log data back to my laptop
 
-    scp -r -i ~/.ssh/google_compute_engine abhinav_gooty_co@$VM_ADDRESS:/home/abhinav_gooty_co/workspace/MelNet/logs/blizzard-compressed-t6 ~/workspace/MelNet/logs
+    scp -r -i ~/.ssh/google_compute_engine abhinav_gooty_co@$VM_ADDRESS:/home/abhinav_gooty_co/workspace/MelNet/logs/blizzard-compressed-12layers-t2 ~/workspace/MelNet/logs
 
 ======= One-time commands =======
 

@@ -1,38 +1,59 @@
 import boto3
+import botocore
 from botocore.exceptions import ClientError
-import logging
+import os
+import glob
 
-def upload_file(file_name, bucket, object_name=None):
-    """Upload a file to an S3 bucket
-
-    :param file_name: File to upload
-    :param bucket: Bucket to upload to
-    :param object_name: S3 object name. If not specified then file_name is used
-    :return: True if file was uploaded, else False
-    """
-
-    # If S3 object_name was not specified, use file_name
-    if object_name is None:
-        object_name = file_name
-
-    # Upload the file
+def upload_file(local_file_path, s3_file_path, bucket):
     s3_client = boto3.client(
-        's3',
-        aws_access_key_id='',
-        aws_secret_access_key=''
+        's3'
     )
     try:
-        response = s3_client.upload_file(file_name, bucket, object_name)
+        response = s3_client.upload_file(local_file_path, bucket, s3_file_path)
     except ClientError as e:
-        logging.error(e)
+        print("ERROR WITH UPLOAD")
+        print(e)
         return False
     return True
 
-upload_file('datasets/blizzard2013/lessac/README_for_Lessac_Blizzard2013_CatherineByers_train', 'blizzard2013', 'blizzard2013/lessac/README_for_Lessac_Blizzard2013_CatherineByers_train')
-print("Uploaded README")
-upload_file('datasets/blizzard2013/lessac/BC2013_segmented_v0_txt1.zip', 'blizzard2013', 'blizzard2013/lessac/BC2013_segmented_v0_txt1.zip')
-print("Uploaded txt1.zip")
-upload_file('datasets/blizzard2013/lessac/BC2013_segmented_v0_txt2.zip', 'blizzard2013', 'blizzard2013/lessac/BC2013_segmented_v0_txt2.zip')
-print("Uploaded txt2.zip")
-upload_file('datasets/blizzard2013/lessac/BC2013_segmented_v0_wav1.zip', 'blizzard2013', 'blizzard2013/lessac/BC2013_segmented_v0_wav1.zip')
-print("Uploaded wav1.zip")
+def check_if_s3_path_exists(bucket, s3_file_path):
+    s3 = boto3.resource('s3')
+    try:
+        s3.Object(bucket, s3_file_path).load()
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == "404":
+            # The object does not exist.
+            return False
+        else:
+            # Something else has gone wrong.
+            raise e
+    else:
+        # The object does exist.
+        return True
+
+def upload_logs(run_name, s3_folder_name):
+    local_file_wildcard = os.path.join('../logs/', run_name, '*')
+    files = glob.glob(local_file_wildcard)
+    for file in files:
+        filename = os.path.basename(file)
+        s3_path = os.path.join(s3_folder_name, 'logs', run_name, filename)
+        print('Uploading %s' % s3_path)
+        upload_file(file, s3_path, 'melnet-training-runs')
+
+def upload_checkpoints(run_name, s3_folder_name):
+    bucket = 'melnet-training-runs'
+    local_file_wildcard = os.path.join('../chkpt/', run_name, '*')
+    files = glob.glob(local_file_wildcard)
+    for file in files:
+        filename = os.path.basename(file)
+        s3_path = os.path.join(s3_folder_name, 'chkpt', run_name, filename)
+        exists = check_if_s3_path_exists(bucket, s3_path)
+        if exists:
+            print("Skipping upload of %s - it was already uploaded" % filename)
+            continue
+        print('Uploading %s' % filename)
+        upload_file(file, s3_path, bucket)
+
+run = 'blizzard-compressed-12layers-t6'
+upload_checkpoints(run, 'blizzard-compressed')
+upload_logs(run, 'blizzard-compressed')

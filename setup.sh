@@ -1,3 +1,5 @@
+mkdir .aws
+touch .aws/credentials
 mkdir workspace
 cd workspace
 git clone https://github.com/abhinavvadrevu/MelNet.git
@@ -14,5 +16,6 @@ sudo apt install ffmpeg
 # source activate pytorch_p36
 pip install --upgrade pip
 pip install -r requirements.txt
+
 # echo "Run the script now. Eg:"
 # echo "python trainer.py -c ./config/blizzard-5-tier.yaml -n blizzard_t5 -t 5 -b 1 -s TTS"
