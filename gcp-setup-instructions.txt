@@ -38,7 +38,7 @@ To copy setup instructions:
 
 To run training:
 
-    python trainer.py -c ./config/blizzard.yaml -n blizzard-t1 -t 1 -b 16 -s TTS
+    python trainer.py -c ./config/blizzard_compressed.yaml -n blizzard-compressed-12layers-t2 -t 2 -b 2
 
 To list instances:
 
@@ -48,7 +48,7 @@ To delete instance:
 
     gcloud compute instances delete $INSTANCE_NAME --zone=$ZONE
 
-To copy data back to my laptop
+To copy log data back to my laptop
 
     scp -r -i ~/.ssh/google_compute_engine abhinav_gooty_co@$VM_ADDRESS:/home/abhinav_gooty_co/workspace/MelNet/logs/blizzard-compressed-t6 ~/workspace/MelNet/logs
 
