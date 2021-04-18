@@ -35,7 +35,7 @@ To login via ssh command:
 To copy setup instructions and credentials:
     
     scp -i ~/.ssh/google_compute_engine ~/workspace/MelNet/setup.sh abhinav_gooty_co@$VM_ADDRESS:/home/abhinav_gooty_co/
-    scp -i ~/.ssh/google_compute_engine ~/.aws abhinav_gooty_co@$VM_ADDRESS:/home/abhinav_gooty_co/
+    scp -r -i ~/.ssh/google_compute_engine ~/.aws abhinav_gooty_co@$VM_ADDRESS:/home/abhinav_gooty_co/
 
 To run training:
 
