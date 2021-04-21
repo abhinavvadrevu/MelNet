@@ -38,7 +38,7 @@ class Reconstruct():
         x = (x - self.hp.audio.ref_level_db) / -self.hp.audio.min_level_db + 1
         return x
 
-    def inverse(self, melspectrogram, iters=1000):
+    def inverse(self, melspectrogram, iters=30000):
         x = torch.normal(0, 1e-6, size=((melspectrogram.size(1) - 1) * self.hp.audio.hop_length, )).cuda().requires_grad_()
         optimizer = torch.optim.LBFGS([x], tolerance_change=1e-16)
         melspectrogram = self.post_spec(melspectrogram)
@@ -53,6 +53,9 @@ class Reconstruct():
         with tqdm(range(iters)) as pbar:
             for i in pbar:
                 optimizer.step(closure=closure)
-                pbar.set_postfix(loss=self.criterion(self.get_mel(x), melspectrogram).item())
+                loss_num = self.criterion(self.get_mel(x), melspectrogram).item()
+                print(type(loss_num))
+                print(loss_num)
+                pbar.set_postfix(loss=loss_num)
 
         return x, self.pre_spec(self.get_mel(x))

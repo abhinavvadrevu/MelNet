@@ -70,6 +70,8 @@ class AudioOnlyDataset(Dataset):
         wav = read_wav_np(self.file_list[idx], sample_rate=self.hp.audio.sr)
         # wav = cut_wav(self.wavlen, wav)
         mel = self.melgen.get_normalized_mel(wav)
+        reconstruted = self.melgen.reconstruct_audio(mel)
+        self.melgen.save_audio(self.file_list[idx], reconstruted)
         source, target = self.tierutil.cut_divide_tiers(mel, self.tier)
 
         return source, target
