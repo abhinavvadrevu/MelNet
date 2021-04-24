@@ -2,6 +2,7 @@ import os
 import glob
 import torch
 import random
+import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
 from torch.utils.data import Dataset, DataLoader
@@ -70,9 +71,27 @@ class AudioOnlyDataset(Dataset):
         wav = read_wav_np(self.file_list[idx], sample_rate=self.hp.audio.sr)
         # wav = cut_wav(self.wavlen, wav)
         mel = self.melgen.get_normalized_mel(wav)
-        reconstruted = self.melgen.reconstruct_audio(mel)
-        self.melgen.save_audio(self.file_list[idx], reconstruted)
         source, target = self.tierutil.cut_divide_tiers(mel, self.tier)
+        
+        # # Reconstruct audio for testing
+        # filename = os.path.basename(self.file_list[idx])
+        # plt.imsave('./reconstructed_audio/original_'+filename+'.png', mel)
+        # plt.imsave('./reconstructed_audio/source_'+filename+'.png', source)
+        # plt.imsave('./reconstructed_audio/target_'+filename+'.png', target)
+        # self.melgen.save_audio('source_'+filename, wav)
+
+        # source_tensor = torch.unsqueeze(torch.from_numpy(source), 0)
+        # target_tensor = torch.unsqueeze(torch.from_numpy(target), 0)
+        # reconstructed_mel_tensor = self.tierutil.interleave(source_tensor, target_tensor, self.tier)
+        # reconstructed_mel = reconstructed_mel_tensor.numpy()
+        # print('Shapes: [mel, source, target, reconstruction], [%s, %s, %s, %s]' % (
+        #     mel.shape,
+        #     source.shape,
+        #     target.shape,
+        #     reconstructed_mel.shape,
+        #     ))
+        # reconstructed_audio = self.melgen.reconstruct_audio(reconstructed_mel)
+        # self.melgen.save_audio('reconstructed_'+filename, reconstructed_audio)
 
         return source, target
 

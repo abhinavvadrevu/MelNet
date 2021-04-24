@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 import logging
 import argparse
@@ -9,8 +10,7 @@ from utils.hparams import HParam
 from utils.writer import MyWriter
 from datasets.wavloader import create_dataloader
 
-
-if __name__ == '__main__':
+def parse_args(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config', type=str, required=True,
                         help="yaml file for configuration")
@@ -26,7 +26,11 @@ if __name__ == '__main__':
                         help="TTS")
     parser.add_argument('-a', '--train-all', type=bool, default=False, required=False,
                         help="Use this param to train all tiers of a TTS model")
-    args = parser.parse_args()
+    return parser.parse_args(args)
+
+if __name__ == '__main__':
+    print(sys.argv[1:])
+    args = parse_args(sys.argv[1:])
 
     hp = HParam(args.config)
     with open(args.config, 'r') as f:

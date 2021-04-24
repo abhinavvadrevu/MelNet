@@ -31,6 +31,7 @@ class MelGen():
           hop_length=self.hp.audio.hop_length,
           win_length=self.hp.audio.win_length
         )
+        return y
 
     def pre_spec(self, x):
         return self.normalize(librosa.power_to_db(x) - self.hp.audio.ref_level_db)
@@ -45,7 +46,9 @@ class MelGen():
         return (np.clip(x, 0.0, 1.0) - 1.0) * -self.hp.audio.min_level_db
 
     def save_audio(self, filename, y):
+        filename = os.path.basename(filename)
         save_dir = 'reconstructed_audio'
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
-        sf.write('reconstructed_audio/%s.wav' % filename, y, self.hp.audio.sr, 'PCM_24')
+        print('Saved %s' % filename)
+        sf.write('./reconstructed_audio/%s' % filename, y, self.hp.audio.sr, 'PCM_24')
