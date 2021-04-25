@@ -11,7 +11,7 @@ OR:
       --image-project=deeplearning-platform-release \
       --maintenance-policy=TERMINATE \
       --metadata="install-nvidia-driver=True" \
-      --boot-disk-size=500GB \
+      --boot-disk-size=200GB \
       --accelerator="type=nvidia-tesla-t4,count=1" \
       --machine-type=n1-highcpu-8
       # --accelerator="type=nvidia-tesla-a100,count=1" \

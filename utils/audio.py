@@ -50,5 +50,5 @@ class MelGen():
         save_dir = 'reconstructed_audio'
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
-        print('Saved %s' % filename)
+        print('Saving %s' % filename)
         sf.write('./reconstructed_audio/%s' % filename, y, self.hp.audio.sr, 'PCM_24')

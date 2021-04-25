@@ -11,6 +11,7 @@ from utils.writer import MyWriter
 from datasets.wavloader import create_dataloader
 
 def parse_args(args):
+    print(args)
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config', type=str, required=True,
                         help="yaml file for configuration")
@@ -29,7 +30,6 @@ def parse_args(args):
     return parser.parse_args(args)
 
 if __name__ == '__main__':
-    print(sys.argv[1:])
     args = parse_args(sys.argv[1:])
 
     hp = HParam(args.config)

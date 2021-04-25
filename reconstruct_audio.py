@@ -26,8 +26,9 @@ def get_audio():
   random.shuffle(file_list)
   file_list = file_list[int(0.95 * len(file_list)):]
   for idx in range(len(file_list)):
+    filename = os.path.basename(file_list[idx])
     wav = read_wav_np(file_list[idx], sample_rate=hp.audio.sr)
-    yield wav
+    yield filename, wav
 
 def deconstruct_audio(wav):
   hp = HParam('./config/blizzard_compressed_experiments.yaml')
@@ -38,18 +39,15 @@ def deconstruct_audio(wav):
   for tier in range(1, 7):
     source, target = tierutil.cut_divide_tiers(mel, tier)
     print("Tier %d has source dims: %s, target dims %s" % (tier, source.shape, target.shape))
-    # print("Tier %d source: %s" % (tier, source))
-    # print("Tier %d target: %s" % (tier, target))
-    # print('')
     tier_to_breakdown[tier] = (source, target)
   tier_to_breakdown[7] = (mel, mel)
   return tier_to_breakdown
-    # TODO: Run this and check if the source of a given tier is the same as the target from the tier above.
 
-def reconstruct_audio(tier_to_breakdown):
+def reconstruct_audio(filename, tier_to_breakdown):
   hp = HParam('./config/blizzard_compressed_experiments.yaml')
   melgen = MelGen(hp)
   tierutil = TierUtil(hp)
+  final_reconstruction = None
 
   # Verify that tier 2 is conditionally generated from just tier 1
   assert (breakdown[2][0] == breakdown[1][1]).all(), "Tier 2 not created from Tier 1"
@@ -64,44 +62,27 @@ def reconstruct_audio(tier_to_breakdown):
     reconstructed_mel = reconstructed_mel_tensor.numpy()[0]
 
     # Verify that interleaving the source and target of the current tier conditionally generates the source of the next tier
-    next_tier = tier_to_breakdown[tier+1][0]
-    assert (reconstructed_mel == next_tier).all(), "Tier %d not created from Tier %d" % (tier+1, tier)
-
-    print('Tier %d shapes: [source, target, reconstruction], [%s, %s, %s]' % (
-        tier,
-        source.shape,
-        target.shape,
-        reconstructed_mel.shape,
-        ))
-  reconstructed_audio = melgen.reconstruct_audio(breakdown[7][0])
+    if tier < 6:
+      next_tier = tier_to_breakdown[tier+1][0]
+      assert (reconstructed_mel == next_tier).all(), "Tier %d not created from Tier %d" % (tier+1, tier)
+    else:
+      final_reconstruction = reconstructed_mel
+  print('reconstructing audio...')
+  reconstructed_audio = melgen.reconstruct_audio(final_reconstruction)
   melgen.save_audio('reconstructed_'+filename, reconstructed_audio)
+
 
 
 
 breakdown = None
 audio_files = get_audio()
-for wav in audio_files:
+for filename, wav in audio_files:
   breakdown = deconstruct_audio(wav)
-  # reconstruct_audio(breakdown)
+  reconstruct_audio(filename, breakdown)
+  hp = HParam('./config/blizzard_compressed_experiments.yaml')
+  melgen = MelGen(hp)
+  melgen.save_audio('original_'+filename, wav)
+  print('')
+  print('')
   break
 
-# def get_dataset(tier):
-#   args = parse_args(['-c', './config/blizzard_compressed.yaml', '-n', 'blizzard_compressed_test', '-t', str(tier), '-b', '1'])
-#   hp = HParam(args.config)
-#   if tier == 1:
-#     args = parse_args(['-c', './config/blizzard_compressed.yaml', '-n', 'blizzard_compressed_test', '-t', '1', '-b', '1', '-s', 'TTS'])
-#     hp = HParam(args.config)
-#   dataset = AudioOnlyDataset(hp, args, False)
-#   return dataset
-
-# # deconstruct audio into mel tiers
-
-# def deconstruct_tier(tier):
-#   loader = tqdm(create_testloader(tier), desc='Test data loader', dynamic_ncols=True)
-#   for input_tuple in loader:
-#     if args.tts:
-#       seq, text_lengths, source, target, audio_lengths = input_tuple
-#     else:
-#       source, target, audio_lengths = input_tuple
-    
-# reconstruct it again

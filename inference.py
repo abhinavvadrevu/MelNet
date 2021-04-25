@@ -1,4 +1,5 @@
 import os
+import sys
 import glob
 import argparse
 import torch
@@ -12,7 +13,8 @@ from utils.constant import t_div
 from utils.hparams import HParam
 from model.model import MelNet
 
-if __name__ == '__main__':
+def parse_args(args):
+    print(args)
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config', type=str, required=True,
                         help="yaml file for configuration")
@@ -24,7 +26,11 @@ if __name__ == '__main__':
                         help="Name for sample")
     parser.add_argument('-i', '--input', type=str, default=None, required=False,
                         help="Input for conditional generation, leave empty for unconditional")
-    args = parser.parse_args()
+    return parser.parse_args(args)
+
+if __name__ == '__main__':
+    
+    args = parse_args(sys.argv[1:])
 
     hp = HParam(args.config)
     infer_hp = HParam(args.infer_config)
