@@ -14,7 +14,6 @@ from utils.hparams import HParam
 from model.model import MelNet
 
 def parse_args(args):
-    print(args)
     parser = argparse.ArgumentParser()
     parser.add_argument('-c', '--config', type=str, required=True,
                         help="yaml file for configuration")

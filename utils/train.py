@@ -93,7 +93,7 @@ def train_helper(args, pt_dir, chkpt_path, trainloader, testloader, writer, logg
     init_epoch = -1
     step = 0
 
-    file_pattern = os.path.join(pt_dir, '%s_%s_tier%d_[0-9][0-9][0-9].pt' % (args.name, githash, args.tier))
+    file_pattern = os.path.join(pt_dir, '%s_*_tier%d_[0-9][0-9][0-9].pt' % (args.name, args.tier))
     files = glob.glob(file_pattern)
     if len(files) > 0:
         last_epoch = max(map(lambda x: int(x[-6:-3]), files))

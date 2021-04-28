@@ -47,8 +47,8 @@ class MelGen():
 
     def save_audio(self, filename, y):
         filename = os.path.basename(filename)
-        save_dir = 'reconstructed_audio'
+        save_dir = 'validation_tests'
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
         print('Saving %s' % filename)
-        sf.write('./reconstructed_audio/%s' % filename, y, self.hp.audio.sr, 'PCM_24')
+        sf.write('./validation_tests/%s' % filename, y, self.hp.audio.sr, 'PCM_24')

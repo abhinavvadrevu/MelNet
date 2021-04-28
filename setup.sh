@@ -51,5 +51,6 @@ cd ../..
 
 
 
+
 # echo "Run the script now. Eg:"
-# echo "python trainer.py -c ./config/blizzard-5-tier.yaml -n blizzard_t5 -t 5 -b 1 -s TTS"
+# echo "python trainer.py -c ./config/blizzard_compressed.yaml -n blizzard-compressed-12layers-t1 -t 1 -b 1 -s TTS"

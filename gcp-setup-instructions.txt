@@ -13,7 +13,7 @@ OR:
       --metadata="install-nvidia-driver=True" \
       --boot-disk-size=200GB \
       --accelerator="type=nvidia-tesla-t4,count=1" \
-      --machine-type=n1-highcpu-8
+      --machine-type=n1-standard-1
       # --accelerator="type=nvidia-tesla-a100,count=1" \
       # --machine-type=a2-highgpu-1g
 
