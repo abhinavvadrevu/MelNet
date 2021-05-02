@@ -51,6 +51,15 @@ cd ../..
 
 
 
+mkdir logs
+cd logs
+curl https://melnet-training-runs.s3.amazonaws.com/blizzard-compressed/logs/blizzard-compressed-12layers-t1/blizzard-compressed-12layers-t1-1618761441.log -O
+curl https://melnet-training-runs.s3.amazonaws.com/blizzard-compressed/logs/blizzard-compressed-12layers-t1/blizzard-compressed-12layers-t1-1618770883.log -O
+curl https://melnet-training-runs.s3.amazonaws.com/blizzard-compressed/logs/blizzard-compressed-12layers-t1/events.out.tfevents.1618761441.chronicle-a100.5519.0 -O
+curl https://melnet-training-runs.s3.amazonaws.com/blizzard-compressed/logs/blizzard-compressed-12layers-t1/events.out.tfevents.1618770883.chronicle-a100.12205.0 -O
+cd ..
 
-# echo "Run the script now. Eg:"
-# echo "python trainer.py -c ./config/blizzard_compressed.yaml -n blizzard-compressed-12layers-t1 -t 1 -b 1 -s TTS"
+echo "Run the script now. Eg:"
+echo "python trainer.py -c config/blizzard_compressed.yaml -n blizzard-compressed-12layers-t1 -t 1 -b 1 -s TTS"
+echo "Watch GPU memory with:"
+echo "gpustat -cpi"

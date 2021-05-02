@@ -97,7 +97,11 @@ def train_helper(args, pt_dir, chkpt_path, trainloader, testloader, writer, logg
     files = glob.glob(file_pattern)
     if len(files) > 0:
         last_epoch = max(map(lambda x: int(x[-6:-3]), files))
-        chkpt_file_path = '%s_%s_tier%d_%03d.pt' % (args.name, githash, args.tier, last_epoch)
+        last_epoch_str = f'{last_epoch:03}'
+        new_filepattern = os.path.join(pt_dir, '%s_*_tier%d_%s.pt' % (args.name, args.tier, last_epoch_str))
+        last_file = glob.glob(file_pattern)[-1]
+        last_githash = last_file[-20:-13]
+        chkpt_file_path = '%s_%s_tier%d_%03d.pt' % (args.name, last_githash, args.tier, last_epoch)
         chkpt_path = os.path.join(pt_dir, chkpt_file_path)
 
     if chkpt_path is not None:
