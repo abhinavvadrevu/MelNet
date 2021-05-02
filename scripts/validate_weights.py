@@ -23,7 +23,7 @@ from datasets.wavloader import AudioOnlyDataset
 
 # load up the test set
 def load_testset():
-  # args = parse_train_args(['-c', './config/blizzard_compressed_experiments.yaml', '-n', 'blizzard_compressed_validation', '-t', str(tier), '-b', '1'])
+  # args = parse_train_args(['-c', './config/blizzard_compressed_experiments.yaml', '-n', 'blizzard_compressed_validation', '-t', str(tier), '-b', '1', '-s', 'TTS'])
   hp = HParam('./config/blizzard_compressed_experiments.yaml')
   
   dataset = []

@@ -55,13 +55,25 @@ cd ../..
 
 mkdir logs
 cd logs
+mkdir blizzard-compressed-12layers-t1
+cd blizzard-compressed-12layers-t1
+# Tier 1 logs
 curl https://melnet-training-runs.s3.amazonaws.com/blizzard-compressed/logs/blizzard-compressed-12layers-t1/blizzard-compressed-12layers-t1-1618761441.log -O
 curl https://melnet-training-runs.s3.amazonaws.com/blizzard-compressed/logs/blizzard-compressed-12layers-t1/blizzard-compressed-12layers-t1-1618770883.log -O
 curl https://melnet-training-runs.s3.amazonaws.com/blizzard-compressed/logs/blizzard-compressed-12layers-t1/events.out.tfevents.1618761441.chronicle-a100.5519.0 -O
 curl https://melnet-training-runs.s3.amazonaws.com/blizzard-compressed/logs/blizzard-compressed-12layers-t1/events.out.tfevents.1618770883.chronicle-a100.12205.0 -O
-cd ..
+cd ../..
+
+# Tier 6 logs
+cd logs
+mkdir blizzard-compressed-12layers-t6
+cd blizzard-compressed-12layers-t6
+curl https://melnet-training-runs.s3.amazonaws.com/blizzard-compressed/logs/blizzard-compressed-12layers-t6/blizzard-compressed-12layers-t6-1618638216.log -O
+curl https://melnet-training-runs.s3.amazonaws.com/blizzard-compressed/logs/blizzard-compressed-12layers-t6/events.out.tfevents.1618638216.chronicle-a100.17059.0 -O
+cd ../..
 
 echo "Run the script now. Eg:"
 echo "python trainer.py -c config/blizzard_compressed.yaml -n blizzard-compressed-12layers-t1 -t 1 -b 1 -s TTS"
+echo "python trainer.py -c config/blizzard_compressed.yaml -n blizzard-compressed-12layers-t6 -t 6 -b 1"
 echo "Watch GPU memory with:"
 echo "gpustat -cpi"
