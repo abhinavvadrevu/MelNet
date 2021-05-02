@@ -14,7 +14,7 @@ from text import text_to_sequence
 
 def create_dataloader(hp, args, train):
     if args.tts:
-        dataset = AudioTextDataset(hp, args, train)
+        dataset = CompleteAudioTextDataset(hp, args, train)
         return DataLoader(
             dataset=dataset,
             batch_size=args.batch_size,
@@ -25,7 +25,7 @@ def create_dataloader(hp, args, train):
             collate_fn=TextCollate()
         )
     else:
-        dataset = AudioOnlyDataset(hp, args, train)
+        dataset = CompleteAudioOnlyDataset(hp, args, train)
         return DataLoader(
             dataset=dataset,
             batch_size=args.batch_size,
@@ -95,6 +95,37 @@ class AudioOnlyDataset(Dataset):
 
         return source, target
 
+class CompleteAudioOnlyDataset(AudioOnlyDataset):
+    def __init__(self, hp, args, train):
+        self.hp = hp
+        self.args = args
+        self.train = train
+        self.data = hp.data.path
+        self.melgen = MelGen(hp)
+        self.tierutil = TierUtil(hp)
+        self.file_list = []
+
+        if train:
+            self.file_list = glob.glob(
+                os.path.join(hp.data.path, 'cleaned_blizzard/train_wav', '**', hp.data.extension),
+                recursive=True
+            )
+        else:
+            self.file_list = glob.glob(
+                os.path.join(hp.data.path, 'cleaned_blizzard/test_wav', '**', hp.data.extension),
+                recursive=True
+            )
+
+        # Just to ensure the data always comes in the right order
+        random.seed(123)
+        random.shuffle(self.file_list)
+
+        self.wavlen = int(hp.audio.sr * hp.audio.duration)
+        self.tier = self.args.tier
+
+        self.melgen = MelGen(hp)
+        self.tierutil = TierUtil(hp)
+
 class AudioTextDataset(Dataset):
     def __init__(self, hp, args, train):
         self.hp = hp
@@ -162,6 +193,42 @@ class AudioTextDataset(Dataset):
         source, target = self.tierutil.cut_divide_tiers(mel, self.tier)
 
         return seq, source, target
+
+class CompleteAudioTextDataset(AudioTextDataset):
+    def __init__(self, hp, args, train):
+        self.hp = hp
+        self.args = args
+        self.train = train
+        self.data = hp.data.path
+        self.melgen = MelGen(hp)
+        self.tierutil = TierUtil(hp)
+
+        # this will search all files within hp.data.path
+        self.root_dir = hp.data.path
+        self.dataset = []
+
+        txt_path = os.path.join(self.root_dir, 'cleaned_blizzard/train_txt' if train else 'test_txt')
+        txt_file_list = glob.glob(
+            os.path.join(txt_path, '**', hp.data.extension),
+            recursive=True
+        )
+        for txt_filepath in txt_file_list:
+            wav_filepath = txt_filepath.replace('_txt', '_wav').replace('.txt', '.wav')
+            f = open(txt_filepath, "r")
+            sentence = f.read().strip()
+            f.close()
+            # Skip the length filtering below because we already filtered the dataset
+            # length = get_length(wav_path, hp.audio.sr)
+            # if length < hp.audio.duration:
+            self.dataset.append((wav_filepath, sentence))
+
+        random.seed(123)
+        random.shuffle(self.dataset)
+        self.wavlen = int(hp.audio.sr * hp.audio.duration)
+        self.tier = self.args.tier
+
+        self.melgen = MelGen(hp)
+        self.tierutil = TierUtil(hp)
 
 class TextCollate():
     def __init__(self):
