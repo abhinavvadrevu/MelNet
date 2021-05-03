@@ -207,7 +207,7 @@ class CompleteAudioTextDataset(AudioTextDataset):
         self.root_dir = hp.data.path
         self.dataset = []
 
-        txt_path = os.path.join(self.root_dir, 'cleaned_blizzard/train_txt' if train else 'test_txt')
+        txt_path = os.path.join(self.root_dir, 'cleaned_blizzard/train_txt' if train else 'cleaned_blizzard/test_txt')
         txt_file_list = glob.glob(
             os.path.join(txt_path, '**', '*.txt'),
             recursive=True
