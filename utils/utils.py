@@ -3,6 +3,7 @@ import numpy as np
 import subprocess
 import audiosegment
 import inflect
+from num2words import num2words
 
 PAD = '_'
 EOS = '~'
