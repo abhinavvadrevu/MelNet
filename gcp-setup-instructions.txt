@@ -1,8 +1,8 @@
 First kick off an instance from here: https://console.cloud.google.com/marketplace/details/click-to-deploy-images/deeplearning?_ga=2.159550910.264528323.1617829680-635932366.1617487109
 OR:
     export IMAGE_FAMILY="pytorch-1-6-cu110"
-    export ZONE="us-central1-b"
-    export INSTANCE_NAME="chronicle-t4"
+    export ZONE="us-east4-b"
+    export INSTANCE_NAME="chronicle-t4-trainfromscratch"
     # export INSTANCE_NAME="chronicle-a100"
 
     gcloud compute instances create $INSTANCE_NAME \
@@ -39,7 +39,7 @@ To copy setup instructions and credentials:
 
 To run training:
 
-    python trainer.py -c ./config/blizzard_compressed.yaml -n blizzard-compressed-12layers-t2 -t 2 -b 1
+    python trainer.py -c ./config/blizzard_alldata.yaml -n blizzard-compressed-alldata-t1 -t 1 -b 1
 
 To list instances:
 
