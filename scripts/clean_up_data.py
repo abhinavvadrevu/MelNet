@@ -22,8 +22,12 @@ import audiosegment
 #   - train_txt
 #   - test_wav
 #   - test_txt
+LAST_INDEX = None
 
 def get_last_index(train=False):
+  global LAST_INDEX
+  if LAST_INDEX != None:
+    return LAST_INDEX
   path = 'datasets/train_txt'
   if not train:
     path = 'datasets/test_txt'
@@ -32,17 +36,19 @@ def get_last_index(train=False):
       recursive=True
   )
   last_index = 0
-  # Assumes we always have 5 digits in naming
+  # Assumes we always have 6 digits in naming
   if len(file_list) > 0:
-    last_index = max(map(lambda x: int(x[-9:-4]), file_list))
+    last_index = max(map(lambda x: int(x[-10:-4]), file_list))
+  LAST_INDEX = last_index
   return last_index
 
 def save_new_file(wavpath, sentence, train=False):
   # saves a new file into our new dataset
   # First get last index number
+  global LAST_INDEX
   last_index = get_last_index(train)
   next_index = last_index + 1
-  new_index_str = f'{next_index:05}'
+  new_index_str = f'{next_index:06}'
   train_str = 'train' if train else 'test'
   txt_filepath = 'datasets/%s_txt/%s.txt' % (train_str, new_index_str)
   wav_filepath = 'datasets/%s_wav/%s.wav' % (train_str, new_index_str)
@@ -53,6 +59,7 @@ def save_new_file(wavpath, sentence, train=False):
   new_wav_file_path = os.path.dirname(wav_filepath)
   shutil.copy(wavpath, new_wav_file_path)
   os.rename(os.path.join(new_wav_file_path, old_wav_file_name), wav_filepath)
+  LAST_INDEX += 1
 
 
 def get_length(wavpath, sample_rate):
@@ -92,10 +99,9 @@ def parse_segmented():
   return
 
 def read_txt_file(filepath):
-  f = open(filepath, "r")
-  sentence = f.read().strip()
-  f.close()
-  return sentence
+  with open(filepath, 'r') as reader:
+    sentence = reader.read().strip()
+    return sentence
 
 def write_txt_file(filepath, sentence):
   f = open(filepath, "w")
@@ -103,7 +109,7 @@ def write_txt_file(filepath, sentence):
   f.close()
   return sentence
 
-list_of_sentences = []
+list_of_sentences = set()
 def sentence_exists(new_sentence):
   global list_of_sentences
   # checks if a given sentence already exists in train/test set
@@ -120,27 +126,26 @@ def sentence_exists(new_sentence):
     sentences = []
     for filepath in file_list:
       sentence = read_txt_file(filepath)
-      sentences.append(sentence)
-    list_of_sentences = sentences
+      sentences.append(sentence.replace(" ", "").lower())
+    list_of_sentences = set(sentences)
 
-  for sentence in list_of_sentences:
-    if new_sentence.replace(" ", "").lower() == sentence.replace(" ", "").lower():
-      print("Sentence exists! Tried adding \"%s\" to dataset with \"%s\""% (new_sentence, sentence))
-      return True
+  if new_sentence.replace(" ", "").lower() in list_of_sentences:
+    print("Sentence exists! Tried adding \"%s\" to dataset" % new_sentence)
+    return True
   return False
 
-def parse_new_data():
+def parse_new_data(txt_path, wav_path):
   # reads new data
   # removes duplicates
   # saves data into the right places
 
   # Start with v0_txt1
   txt_file_list = glob.glob(
-      os.path.join('datasets/BC2013_segmented_v1_txt_selection','**', '*.txt'),
+      os.path.join(txt_path,'**', '*.txt'),
       recursive=True
   )
   wav_file_list = glob.glob(
-      os.path.join('datasets/BC2013_segmented_v1_wav_selection','**', '*.wav'),
+      os.path.join(wav_path,'**', '*.wav'),
       recursive=True
   )
 
@@ -149,10 +154,9 @@ def parse_new_data():
   for txt_file in txt_file_list:
     i += 1
     # first check if sentence is already in the dataset
-    print("Processing file %d: %s" % (i, txt_file))
+    print("\n\nProcessing file %d: %s" % (i, txt_file))
     sentence = read_txt_file(txt_file)
     if sentence_exists(sentence):
-      print("%s already exists!" % sentence)
       continue
     txt_filename = os.path.basename(txt_file)
     wav_filename = os.path.basename(txt_file).replace('.txt', '.wav')
@@ -160,7 +164,7 @@ def parse_new_data():
       if wav_file.endswith(wav_filename):
         # print("Found matching wav file! %s" % wav_filename)
         # data_to_save.append((txt_file, wav_file))
-        if 'testset' in txt_file:
+        if random.random() < 0.05:
           save_new_file(wav_file, read_txt_file(txt_file), False)
         else:
           save_new_file(wav_file, read_txt_file(txt_file), True)
@@ -182,9 +186,10 @@ def upload_file(local_file_path, s3_file_path, bucket):
     return True
 
 
-# parse_new_data()
+# parse_new_data('datasets/BC2013_segmented_v0_txt1', 'datasets/BC2013_segmented_v0_wav1')
+# parse_new_data('datasets/BC2013_segmented_v0_txt2', 'datasets/BC2013_segmented_v0_wav2')
 
 def upload_dataset():
-  upload_file('datasets/cleaned_blizzard.zip', 'cleaned_blizzard.zip', 'blizzard2013')
+  upload_file('datasets/complete_blizzard.zip', 'complete_blizzard.zip', 'blizzard2013')
 
 upload_dataset()

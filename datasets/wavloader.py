@@ -107,12 +107,12 @@ class CompleteAudioOnlyDataset(AudioOnlyDataset):
 
         if train:
             self.file_list = glob.glob(
-                os.path.join(hp.data.path, 'cleaned_blizzard/train_wav', '**', hp.data.extension),
+                os.path.join(hp.data.path, 'complete_blizzard/train_wav', '**', hp.data.extension),
                 recursive=True
             )
         else:
             self.file_list = glob.glob(
-                os.path.join(hp.data.path, 'cleaned_blizzard/test_wav', '**', hp.data.extension),
+                os.path.join(hp.data.path, 'complete_blizzard/test_wav', '**', hp.data.extension),
                 recursive=True
             )
 
@@ -207,7 +207,7 @@ class CompleteAudioTextDataset(AudioTextDataset):
         self.root_dir = hp.data.path
         self.dataset = []
 
-        txt_path = os.path.join(self.root_dir, 'cleaned_blizzard/train_txt' if train else 'cleaned_blizzard/test_txt')
+        txt_path = os.path.join(self.root_dir, 'complete_blizzard/train_txt' if train else 'complete_blizzard/test_txt')
         txt_file_list = glob.glob(
             os.path.join(txt_path, '**', '*.txt'),
             recursive=True
