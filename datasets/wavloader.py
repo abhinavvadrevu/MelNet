@@ -212,7 +212,7 @@ class CompleteAudioTextDataset(AudioTextDataset):
             os.path.join(txt_path, '**', '*.txt'),
             recursive=True
         )
-        for txt_filepath in txt_file_list:
+        for txt_filepath in tqdm(txt_file_list, total=len(txt_file_list)):
             wav_filepath = txt_filepath.replace('_txt', '_wav').replace('.txt', '.wav')
             f = open(txt_filepath, "r")
             sentence = f.read().strip()
