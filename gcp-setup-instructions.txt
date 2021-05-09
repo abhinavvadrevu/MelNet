@@ -39,7 +39,7 @@ To copy setup instructions and credentials:
 
 To run training:
 
-    python trainer.py -c ./config/blizzard_alldata.yaml -n blizzard-compressed-alldata-t1 -t 1 -b 1
+    python trainer.py -c ./config/blizzard_alldata.yaml -n blizzard-compressed-alldata-t1-tts -t 1 -b 1 -s TTS
 
 To list instances:
 
