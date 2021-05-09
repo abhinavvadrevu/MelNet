@@ -219,7 +219,7 @@ class CompleteAudioTextDataset(AudioTextDataset):
             f.close()
             # Skip the length filtering below because we already filtered the dataset
             length = get_length(wav_filepath, hp.audio.sr)
-            if length < hp.audio.duration:
+            if length < hp.audio.duration and length > 0.56 and len(sentence) > 5:
                 self.dataset.append((wav_filepath, sentence))
 
         random.seed(123)
