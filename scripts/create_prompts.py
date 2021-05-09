@@ -6,8 +6,8 @@ from tqdm import tqdm
 import audiosegment
 
 # Define path
-wav_path = 'datasets/complete_blizzard/train_wav'
-txt_path = 'datasets/complete_blizzard/train_txt'
+wav_path = 'datasets/complete_blizzard/test_wav'
+txt_path = 'datasets/complete_blizzard/test_txt'
 old_root_dir = './datasets/segmented'
 
 # Num samples
@@ -55,7 +55,7 @@ for wav_file in tqdm(wav_file_list, total=len(wav_file_list)):
     new_sentences.append(sentence)
 
 # Write to file
-with open('datasets/complete_blizzard/train_prompts.gui', 'w') as writer:
+with open('datasets/complete_blizzard/test_prompts.gui', 'w') as writer:
   for wav_file, sentence in new_dataset:
     writer.write(wav_file)
     writer.write('\n')
