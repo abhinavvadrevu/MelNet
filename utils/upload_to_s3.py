@@ -54,6 +54,6 @@ def upload_checkpoints(run_name, s3_folder_name):
         print('Uploading %s' % filename)
         upload_file(file, s3_path, bucket)
 
-run = 'blizzard-compressed-12layers-t1'
+run = 'blizzard-compressed-alldata-t1-tts'
 upload_checkpoints(run, 'blizzard-compressed')
 upload_logs(run, 'blizzard-compressed')

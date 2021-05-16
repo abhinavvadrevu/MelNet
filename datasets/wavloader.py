@@ -105,16 +105,25 @@ class CompleteAudioOnlyDataset(AudioOnlyDataset):
         self.tierutil = TierUtil(hp)
         self.file_list = []
 
-        if train:
-            self.file_list = glob.glob(
-                os.path.join(hp.data.path, 'complete_blizzard/train_wav', '**', hp.data.extension),
-                recursive=True
-            )
-        else:
-            self.file_list = glob.glob(
-                os.path.join(hp.data.path, 'complete_blizzard/test_wav', '**', hp.data.extension),
-                recursive=True
-            )
+        # if train:
+        #     self.file_list = glob.glob(
+        #         os.path.join(hp.data.path, 'complete_blizzard/train_wav', '**', hp.data.extension),
+        #         recursive=True
+        #     )
+        # else:
+        #     self.file_list = glob.glob(
+        #         os.path.join(hp.data.path, 'complete_blizzard/test_wav', '**', hp.data.extension),
+        #         recursive=True
+        #     )
+        txt_path = 'datasets/complete_blizzard/train_prompts.gui' if train else 'datasets/complete_blizzard/test_prompts.gui'
+        with open(txt_path, 'r') as f:
+            lines = f.read().splitlines()
+            wav_paths = lines[::2]
+            for wav_path in tqdm(wav_paths, desc='Audio data loader', total=len(wav_paths)):
+                # Skip the length filtering below because we already filtered the dataset
+                # length = get_length(wav_path, hp.audio.sr)
+                # if length < hp.audio.duration:
+                self.file_list.append(wav_path)
 
         # Just to ensure the data always comes in the right order
         random.seed(123)
@@ -191,6 +200,7 @@ class AudioTextDataset(Dataset):
         # wav = cut_wav(self.wavlen, wav)
         mel = self.melgen.get_normalized_mel(wav)
         source, target = self.tierutil.cut_divide_tiers(mel, self.tier)
+        # print(text)
 
         return seq, source, target
 
@@ -207,20 +217,29 @@ class CompleteAudioTextDataset(AudioTextDataset):
         self.root_dir = hp.data.path
         self.dataset = []
 
-        txt_path = os.path.join(self.root_dir, 'complete_blizzard/train_txt' if train else 'complete_blizzard/test_txt')
-        txt_file_list = glob.glob(
-            os.path.join(txt_path, '**', '*.txt'),
-            recursive=True
-        )
-        for txt_filepath in tqdm(txt_file_list, total=len(txt_file_list)):
-            wav_filepath = txt_filepath.replace('_txt', '_wav').replace('.txt', '.wav')
-            f = open(txt_filepath, "r")
-            sentence = f.read().strip()
-            f.close()
-            # Skip the length filtering below because we already filtered the dataset
-            length = get_length(wav_filepath, hp.audio.sr)
-            if length < hp.audio.duration and length > 0.56 and len(sentence) > 5:
-                self.dataset.append((wav_filepath, sentence))
+        txt_path = os.path.join(self.root_dir, 'complete_blizzard/train_prompts.gui' if train else 'complete_blizzard/test_prompts.gui')
+        # txt_file_list = glob.glob(
+        #     os.path.join(txt_path, '**', '*.txt'),
+        #     recursive=True
+        # )
+        # for txt_filepath in tqdm(txt_file_list, total=len(txt_file_list)):
+        #     wav_filepath = txt_filepath.replace('_txt', '_wav').replace('.txt', '.wav')
+        #     f = open(txt_filepath, "r")
+        #     sentence = f.read().strip()
+        #     f.close()
+        #     # Skip the length filtering below because we already filtered the dataset
+        #     length = get_length(wav_filepath, hp.audio.sr)
+        #     if length < hp.audio.duration and length > 0.56 and len(sentence) > 5:
+        #         self.dataset.append((wav_filepath, sentence))
+        with open(txt_path, 'r') as f:
+            lines = f.read().splitlines()
+            wav_paths = lines[::2]
+            sentences = lines[1::2]
+            for wav_path, sentence in tqdm(zip(wav_paths, sentences), desc='Audio/text data loader for %s' % txt_path, total=len(wav_paths)):
+                # Skip the length filtering below because we already filtered the dataset
+                # length = get_length(wav_path, hp.audio.sr)
+                # if length < hp.audio.duration:
+                self.dataset.append((wav_path, sentence))
 
         random.seed(123)
         random.shuffle(self.dataset)

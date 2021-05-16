@@ -18,6 +18,10 @@ sudo apt install ffmpeg
 # source activate pytorch_p36
 pip install --upgrade pip
 pip install -r requirements.txt
+cd ~
+mkdir screendir
+export SCREENDIR=~/screendir
+chmod -R +x ~/workspace/MelNet
 
 # # Download all the latest checkpoints in the right places
 # mkdir chkpt
