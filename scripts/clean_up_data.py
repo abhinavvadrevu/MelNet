@@ -7,6 +7,18 @@ import shutil
 from tqdm import tqdm
 import audiosegment
 import json
+import inflect
+from num2words import num2words
+
+PAD = '_'
+EOS = '~'
+PUNC = '!\'(),-.:;?`'
+SPACE = ' '
+SYMBOLS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+en_symbols = SYMBOLS + PAD + EOS + PUNC + SPACE
+_symbol_to_id = {s: i for i, s in enumerate(en_symbols)}
+inflect_engine = inflect.engine()
+
 # Existing directory structure:
 # - datasets
 #   - segmented_training_data
@@ -16,13 +28,6 @@ import json
 #   - BC2013_segmented_v0_wav2
 #   - BC2013_segmented_v1_txt_selection
 #   - BC2013_segmented_v1_wav_selection
-
-# New directory structure
-# - datasets
-#   - train_wav
-#   - train_txt
-#   - test_wav
-#   - test_txt
 
 def process_blizzard(text: str, txt_filepath):
     original_text = text
@@ -127,8 +132,7 @@ def process_blizzard(text: str, txt_filepath):
         print(original_text)
         print(text)
         print('')
-        return False
-    return True
+    return text
 
 def save_new_sentence(original_sentence, parsed_sentence, wav_path, wav_length, train=True):
   to_save = {
@@ -208,10 +212,10 @@ def upload_file(local_file_path, s3_file_path, bucket):
     return True
 
 
-# parse_new_data('datasets/BC2013_segmented_v0_txt1', 'datasets/BC2013_segmented_v0_wav1')
+parse_new_data('datasets/BC2013_segmented_v0_txt1', 'datasets/BC2013_segmented_v0_wav1')
 # parse_new_data('datasets/BC2013_segmented_v0_txt2', 'datasets/BC2013_segmented_v0_wav2')
 
-def upload_dataset():
-  upload_file('datasets/complete_blizzard.zip', 'complete_blizzard.zip', 'blizzard2013')
+# def upload_dataset():
+#   upload_file('datasets/complete_blizzard.zip', 'complete_blizzard.zip', 'blizzard2013')
 
 upload_dataset()
