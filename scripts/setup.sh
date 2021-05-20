@@ -4,10 +4,14 @@ mkdir workspace
 cd workspace
 git clone https://github.com/abhinavvadrevu/MelNet.git
 cd MelNet/datasets
-curl https://blizzard2013.s3.amazonaws.com/blizzard2013/lessac/segmented_compressed.zip -O
-unzip -q segmented_compressed.zip
-curl https://blizzard2013.s3.amazonaws.com/complete_blizzard.zip -O
-unzip -q complete_blizzard.zip
+curl https://blizzard2013.s3.amazonaws.com/blizzard2013/lessac/BC2013_segmented_v0_wav1.zip -O
+curl https://blizzard2013.s3.amazonaws.com/blizzard2013/lessac/BC2013_segmented_v0_wav2.zip -O
+unzip -q BC2013_segmented_v0_wav1.zip
+unzip -q BC2013_segmented_v0_wav2.zip
+curl https://blizzard2013.s3.amazonaws.com/blizzard2013/lessac/blizzard_test.csv -O
+curl https://blizzard2013.s3.amazonaws.com/blizzard2013/lessac/blizzard_train.csv -O
+# curl https://blizzard2013.s3.amazonaws.com/complete_blizzard.zip -O
+# unzip -q complete_blizzard.zip
 # curl https://blizzard2013.s3.amazonaws.com/blizzard-compressed-6-tiers.zip -O
 # unzip segmented_compressed.zip
 cd ..

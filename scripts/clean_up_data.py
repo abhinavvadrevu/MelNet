@@ -29,6 +29,23 @@ inflect_engine = inflect.engine()
 #   - BC2013_segmented_v1_txt_selection
 #   - BC2013_segmented_v1_wav_selection
 
+def remove_punc(text):
+    return text \
+    .replace(',','') \
+    .replace('.','') \
+    .replace('?','') \
+    .replace('*','') \
+    .replace(')','') \
+    .replace('(','') \
+    .replace('[','') \
+    .replace(']','') \
+    .replace('/','') \
+    .replace('{','') \
+    .replace('}','') \
+    .replace(';','') \
+    .replace(':','') \
+    .replace('&','')
+
 def process_blizzard(text: str, txt_filepath):
     original_text = text
     text = text.replace('@ ', '').replace('# ', '').replace('| ', '')
@@ -134,7 +151,10 @@ def process_blizzard(text: str, txt_filepath):
         print('')
     return text
 
+ALL_DATA = []
+
 def save_new_sentence(original_sentence, parsed_sentence, wav_path, wav_length, train=True):
+  global ALL_DATA
   to_save = {
     'original_sentence': original_sentence,
     'parsed_sentence': parsed_sentence,
@@ -142,11 +162,12 @@ def save_new_sentence(original_sentence, parsed_sentence, wav_path, wav_length, 
     'wav_length': wav_length,
     'train': train,
   }
-  with open('./datasets/blizzard.json', 'r+') as json_file:
-    data = json.load(json_file)
-    data.append(to_save)
-    json_file.seek(0)
-    json.dump(data, json_file)
+  ALL_DATA.append(to_save)
+  # with open('./datasets/blizzard.json', 'r+') as json_file:
+  #   data = json.load(json_file)
+  #   data.append(to_save)
+  #   json_file.seek(0)
+  #   json.dump(data, json_file)
 
 
 def get_length(wavpath, sample_rate=22050):
@@ -172,10 +193,6 @@ def parse_new_data(txt_path, wav_path):
   # Start with v0_txt1
   txt_file_list = glob.glob(
       os.path.join(txt_path,'**', '*.txt'),
-      recursive=True
-  )
-  wav_file_list = glob.glob(
-      os.path.join(wav_path,'**', '*.wav'),
       recursive=True
   )
 
@@ -213,9 +230,13 @@ def upload_file(local_file_path, s3_file_path, bucket):
 
 
 parse_new_data('datasets/BC2013_segmented_v0_txt1', 'datasets/BC2013_segmented_v0_wav1')
-# parse_new_data('datasets/BC2013_segmented_v0_txt2', 'datasets/BC2013_segmented_v0_wav2')
+parse_new_data('datasets/BC2013_segmented_v0_txt2', 'datasets/BC2013_segmented_v0_wav2')
+
+print("Saving data...")
+with open('./datasets/blizzard2.json', 'w') as f:
+    json.dump(ALL_DATA, f)
 
 # def upload_dataset():
 #   upload_file('datasets/complete_blizzard.zip', 'complete_blizzard.zip', 'blizzard2013')
 
-upload_dataset()
+# upload_dataset()

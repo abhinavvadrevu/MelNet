@@ -1,3 +1,4 @@
+import csv
 import os
 import glob
 import torch
@@ -14,7 +15,7 @@ from text import text_to_sequence
 
 def create_dataloader(hp, args, train):
     if args.tts:
-        dataset = CompleteAudioTextDataset(hp, args, train)
+        dataset = CompleteAudioTextDatasetv3(hp, args, train)
         return DataLoader(
             dataset=dataset,
             batch_size=args.batch_size,
@@ -25,7 +26,7 @@ def create_dataloader(hp, args, train):
             collate_fn=TextCollate()
         )
     else:
-        dataset = CompleteAudioOnlyDataset(hp, args, train)
+        dataset = CompleteAudioOnlyDatasetv3(hp, args, train)
         return DataLoader(
             dataset=dataset,
             batch_size=args.batch_size,
@@ -132,6 +133,31 @@ class CompleteAudioOnlyDataset(AudioOnlyDataset):
         self.wavlen = int(hp.audio.sr * hp.audio.duration)
         self.tier = self.args.tier
 
+        self.melgen = MelGen(hp)
+        self.tierutil = TierUtil(hp)
+
+class CompleteAudioOnlyDatasetv3(AudioOnlyDataset):
+    def __init__(self, hp, args, train):
+        self.hp = hp
+        self.args = args
+        self.train = train
+        self.data = hp.data.path
+        self.melgen = MelGen(hp)
+        self.tierutil = TierUtil(hp)
+        self.file_list = []
+        self.root_dir = hp.data.path
+        txt_path = os.path.join(self.root_dir, 'blizzard_train.csv' if train else 'blizzard_test.csv')
+        with open(txt_path, 'r') as read_obj:
+            csv_reader = csv.reader(read_obj)
+            for row in csv_reader:
+                [original_sentence, parsed_sentence, wav_path, wav_length] = row
+                if length < hp.audio.duration:
+                    self.file_list.append(wav_path)
+        # Just to ensure the data always comes in the right order
+        random.seed(123)
+        random.shuffle(self.file_list)
+        self.wavlen = int(hp.audio.sr * hp.audio.duration)
+        self.tier = self.args.tier
         self.melgen = MelGen(hp)
         self.tierutil = TierUtil(hp)
 
@@ -248,6 +274,41 @@ class CompleteAudioTextDataset(AudioTextDataset):
 
         self.melgen = MelGen(hp)
         self.tierutil = TierUtil(hp)
+
+class CompleteAudioTextDatasetv3(AudioTextDataset):
+    def __init__(self, hp, args, train):
+        self.hp = hp
+        self.args = args
+        self.train = train
+        self.data = hp.data.path
+        self.melgen = MelGen(hp)
+        self.tierutil = TierUtil(hp)
+
+        # this will search all files within hp.data.path
+        self.root_dir = hp.data.path
+        self.dataset = []
+
+        txt_path = os.path.join(self.root_dir, 'blizzard_train.csv' if train else 'blizzard_test.csv')
+        # open file in read mode
+        with open(txt_path, 'r') as read_obj:
+            csv_reader = csv.reader(read_obj)
+            for row in csv_reader:
+                [original_sentence, parsed_sentence, wav_path, wav_length] = row
+                if length < hp.audio.duration:
+                    self.dataset.append((wav_path, parsed_sentence))
+        random.seed(123)
+        random.shuffle(self.dataset)
+        self.wavlen = int(hp.audio.sr * hp.audio.duration)
+        self.tier = self.args.tier
+        self.melgen = MelGen(hp)
+        self.tierutil = TierUtil(hp)
+
+    def __getitem__(self, idx):
+        seq = self.dataset[idx][1]
+        wav = read_wav_np(self.dataset[idx][0], sample_rate=self.hp.audio.sr)
+        mel = self.melgen.get_normalized_mel(wav)
+        source, target = self.tierutil.cut_divide_tiers(mel, self.tier)
+        return seq, source, target
 
 class TextCollate():
     def __init__(self):
