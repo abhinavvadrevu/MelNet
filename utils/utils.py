@@ -159,6 +159,13 @@ def process_blizzard(text: str):
         raise e
     return np.array(seq, dtype=np.int32)
 
+def seq_to_array(seq):
+    try:
+        ids = [_symbol_to_id[c] for c in seq]
+    except Exception as e:
+        raise e
+    return np.array(ids, dtype=np.int32)
+
 def get_commit_hash():
     message = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"])
     return message.strip().decode('utf-8')

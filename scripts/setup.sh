@@ -6,8 +6,8 @@ git clone https://github.com/abhinavvadrevu/MelNet.git
 cd MelNet/datasets
 curl https://blizzard2013.s3.amazonaws.com/blizzard2013/lessac/BC2013_segmented_v0_wav1.zip -O
 curl https://blizzard2013.s3.amazonaws.com/blizzard2013/lessac/BC2013_segmented_v0_wav2.zip -O
-unzip -q BC2013_segmented_v0_wav1.zip
-unzip -q BC2013_segmented_v0_wav2.zip
+unzip -q BC2013_segmented_v0_wav1.zip -d BC2013_segmented_v0_wav1
+unzip -q BC2013_segmented_v0_wav2.zip -d BC2013_segmented_v0_wav2
 curl https://blizzard2013.s3.amazonaws.com/blizzard2013/lessac/blizzard_test.csv -O
 curl https://blizzard2013.s3.amazonaws.com/blizzard2013/lessac/blizzard_train.csv -O
 # curl https://blizzard2013.s3.amazonaws.com/complete_blizzard.zip -O

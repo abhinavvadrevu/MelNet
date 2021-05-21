@@ -6,17 +6,18 @@ import plotille
 from tqdm import tqdm
 import audiosegment
 
-with open('datasets/blizzard.csv') as csv_file:
+with open('datasets/blizzard_train.csv') as csv_file:
     reader = csv.reader(csv_file, delimiter=',')
     rows = list(reader)
 
 headers = rows.pop(0)
 
-trainset = [row for row in rows if row[4]]
-testset = [row for row in rows if not row[4]]
+# trainset = [row for row in rows if row[4]]
+# testset = [row for row in rows if not row[4]]
+trainset = rows
 
 print("Number of txt/wav samples in trainset: %d" % len(trainset))
-print("Number of txt/wav samples in testset: %d" % len(testset))
+# print("Number of txt/wav samples in testset: %d" % len(testset))
 print("Number of txt/wav samples in total: %d" % len(rows))
 
 # Wav legth histogram
@@ -29,7 +30,7 @@ print("Total length: %d hours" % (sum(all_lengths) / 3600.0))
 print(hist1)
 print('')
 
-lengths_under_10 = [x for x in all_lengths if x < 10]
+lengths_under_10 = [x for x in all_lengths if (x < 10 and x > 0.5)]
 hist2 = plotille.hist(lengths_under_10, bins=40, width=80, log_scale=False, linesep='\n', lc=None, bg=None, color_mode='names')
 print("Wav lengths in trainset for length < 10s")
 print("Total length for under 10s: %d seconds" % sum(lengths_under_10))
