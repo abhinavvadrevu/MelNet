@@ -152,7 +152,7 @@ class CompleteAudioOnlyDatasetv3(AudioOnlyDataset):
             headers = next(csv_reader)
             for row in csv_reader:
                 [original_sentence, parsed_sentence, wav_path, wav_length] = row
-                if float(wav_length) < hp.audio.duration and float(wav_length) > 0.2:
+                if float(wav_length) < hp.audio.duration and float(wav_length) > 0.4:
                     self.file_list.append(wav_path)
         # Just to ensure the data always comes in the right order
         random.Random(123).shuffle(self.file_list)
@@ -295,7 +295,7 @@ class CompleteAudioTextDatasetv3(AudioTextDataset):
             headers = next(csv_reader)
             for row in csv_reader:
                 [original_sentence, parsed_sentence, wav_path, wav_length] = row
-                if float(wav_length) < hp.audio.duration and float(wav_length) > 0.2:
+                if float(wav_length) < hp.audio.duration and float(wav_length) > 0.4:
                     self.dataset.append((wav_path, parsed_sentence))
         random.Random(123).shuffle(self.dataset)
         self.wavlen = int(hp.audio.sr * hp.audio.duration)
