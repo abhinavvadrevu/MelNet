@@ -4,10 +4,14 @@ mkdir workspace
 cd workspace
 git clone https://github.com/abhinavvadrevu/MelNet.git
 cd MelNet/datasets
+echo "Downloading part 1 of dataset..."
 curl https://blizzard2013.s3.amazonaws.com/blizzard2013/lessac/BC2013_segmented_v0_wav1.zip -O
+echo "Unzipping part 1 of dataset..."
 unzip -q BC2013_segmented_v0_wav1.zip -d BC2013_segmented_v0_wav1
 # rm BC2013_segmented_v0_wav1.zip
+echo "Downloading part 2 of dataset..."
 curl https://blizzard2013.s3.amazonaws.com/blizzard2013/lessac/BC2013_segmented_v0_wav2.zip -O
+echo "Unzipping part 2 of dataset..."
 unzip -q BC2013_segmented_v0_wav2.zip -d BC2013_segmented_v0_wav2
 # rm BC2013_segmented_v0_wav2.zip
 curl https://blizzard2013.s3.amazonaws.com/blizzard2013/lessac/blizzard_test.csv -O
@@ -24,10 +28,10 @@ sudo apt install ffmpeg
 # source activate pytorch_p36
 pip install --upgrade pip
 pip install -r requirements.txt
-cd ~
-mkdir screendir
-export SCREENDIR=~/screendir
-chmod -R +x ~/workspace/MelNet
+# cd ~
+# mkdir screendir
+# export SCREENDIR=~/screendir
+# chmod -R +x ~/workspace/MelNet
 
 # # Download all the latest checkpoints in the right places
 # mkdir chkpt
