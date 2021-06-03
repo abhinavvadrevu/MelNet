@@ -13,6 +13,7 @@ sftp-config.json
 chkpt/
 logs/
 temp_hw_6_tier_compressed/
+validation_tests/
 
 # just a temporary folder
 temp/

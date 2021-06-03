@@ -1,10 +1,10 @@
 tier: 6
 checkpoints: [
-  'chkpt/blizzard-compressed-12layers-t1/blizzard-compressed-12layers-t1_3790578_tier1_050.pt',
-  'chkpt/blizzard-compressed-12layers-t2/blizzard-compressed-12layers-t2_7f636a8_tier2_044.pt',
-  'chkpt/blizzard-compressed-12layers-t3/blizzard-compressed-12layers-t3_3790578_tier3_014.pt',
-  'chkpt/blizzard-compressed-12layers-t4/blizzard-compressed-12layers-t4_3790578_tier4_019.pt',
-  'chkpt/blizzard-compressed-12layers-t5/blizzard-compressed-12layers-t5_3790578_tier5_034.pt',
-  'chkpt/blizzard-compressed-12layers-t6/blizzard-compressed-12layers-t6_3790578_tier6_014.pt'
+  'chkpt/inference/blizzard-alldata-v5_f3690cd_tier1_011.pt',
+  'chkpt/inference/blizzard-alldata-v5_f203de9_tier2_018.pt',
+  'chkpt/inference/blizzard-alldata-v5_f203de9_tier3_012.pt',
+  'chkpt/inference/blizzard-alldata-v5_f203de9_tier4_008.pt',
+  'chkpt/inference/blizzard-alldata-v5_t5_f203de9_tier5_001.pt',
+  'chkpt/inference/blizzard-alldata-v5_f203de9_tier6_002.pt'
 ]
 conditional: True

@@ -22,6 +22,6 @@ scp -r -i ~/.ssh/chronicle-test-keys.pem ubuntu@$MACHINE:/home/ubuntu/workspace/
 
 5. python inference.py -c ./config/kss.yaml -p ./config/inference.yaml -t [timestep of generated mel spectrogram] -n [name of sample] -i [input sentence for conditional generation]
 
-python inference.py -c config/blizzard_compressed.yaml -p config/inference.yaml -t 64 -n hw_blizzard_compressed -i "Hello, world."
+python inference.py -c config/blizzard_alldata_v5.yaml -p config/inference.yaml -t 64 -n hw_blizzard_v5 -i "Hello, world."
 
 python inference.py -c config/kss.yaml -p config/inference.yaml -t 64 -n kss_hw -i "안녕하세요, 세계"

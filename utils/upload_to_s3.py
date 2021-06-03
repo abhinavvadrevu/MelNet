@@ -54,7 +54,7 @@ def upload_checkpoints(run_name, s3_folder_name):
         print('Uploading %s' % filename)
         upload_file(file, s3_path, bucket)
 
-run = 'blizzard-alldata-v3'
-s3_folder = 'v3'
+run = 'blizzard-alldata-v5'
+s3_folder = 'v5/t1'
 upload_checkpoints(run, s3_folder)
 upload_logs(run, s3_folder)
