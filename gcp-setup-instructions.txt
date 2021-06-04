@@ -2,7 +2,7 @@ First kick off an instance from here: https://console.cloud.google.com/marketpla
 OR:
     export IMAGE_FAMILY="pytorch-1-6-cu110"
     export ZONE="us-east4-b"
-    export INSTANCE_NAME="chronicle-t4-v3"
+    export INSTANCE_NAME="chronicle-t4-trainfromscratch"
     # export INSTANCE_NAME="chronicle-a100-v5"
 
     gcloud compute instances create $INSTANCE_NAME \
