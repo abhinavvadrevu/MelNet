@@ -1,10 +1,10 @@
 tier: 6
 checkpoints: [
-  'chkpt/inference/blizzard-alldata-v5_f3690cd_tier1_011.pt',
+  'chkpt/inference/blizzard-alldata-v5_f3690cd_tier1_012.pt',
   'chkpt/inference/blizzard-alldata-v5_f203de9_tier2_018.pt',
   'chkpt/inference/blizzard-alldata-v5_f203de9_tier3_012.pt',
   'chkpt/inference/blizzard-alldata-v5_f203de9_tier4_008.pt',
-  'chkpt/inference/blizzard-alldata-v5_t5_f203de9_tier5_001.pt',
+  'chkpt/inference/blizzard-alldata-v5_t5_f203de9_tier5_002.pt',
   'chkpt/inference/blizzard-alldata-v5_f203de9_tier6_002.pt'
 ]
 conditional: True
